@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CRM Sales Training</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <style>
+    .prose h1 { font-size: 1.35rem; font-weight: 700; margin: 2rem 0 .75rem; color: #312e81; }
+    .prose h2 { font-size: 1.1rem; font-weight: 600; margin: 1.75rem 0 .5rem; color: #1f2937; scroll-margin-top: 90px; }
+    .prose p, .prose li { font-size: .9rem; line-height: 1.6; color: #374151; }
+    .prose p { margin: .5rem 0; }
+    .prose ul, .prose ol { margin: .5rem 0 .5rem 1.25rem; }
+    .prose ul { list-style: disc; } .prose ol { list-style: decimal; }
+    .prose table { width: 100%; border-collapse: collapse; margin: .75rem 0; font-size: .85rem; display: block; overflow-x: auto; }
+    .prose th, .prose td { border: 1px solid #e5e7eb; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    .prose th { background: #f9fafb; font-weight: 600; }
+    .prose code { background: #f3f4f6; padding: .1rem .3rem; border-radius: 4px; font-size: .8rem; }
+    .prose hr { margin: 2rem 0; border-color: #e5e7eb; }
+    .prose h2.flash { background: #fef3c7; transition: background .3s; }
+    .chat .prose p, .chat .prose li { font-size: .875rem; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
+      <div>
+        <h1 class="text-lg font-bold text-gray-800">CRM Sales Training</h1>
+        <p class="text-xs text-gray-400">HubSpot rules for BDRs, AEs &amp; SMB reps</p>
+      </div>
+      <nav class="flex gap-1 bg-gray-100 p-1 rounded-lg text-sm" id="tabs">
+        <button data-tab="guide" class="tab px-3 py-1.5 rounded-md">📘 Guide</button>
+        <button data-tab="ask" class="tab px-3 py-1.5 rounded-md">💬 Ask a question</button>
+        <button data-tab="deals" class="tab px-3 py-1.5 rounded-md">🔍 My deals</button>
+      </nav>
+      <a href="/logout" class="text-xs text-gray-400 hover:text-gray-600">Log out</a>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <!-- GUIDE -->
+    <section id="tab-guide" class="hidden">
+      <div class="flex gap-6">
+        <aside class="hidden lg:block w-60 shrink-0">
+          <div class="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto text-sm" id="toc"></div>
+        </aside>
+        <div class="flex-1 min-w-0">
+          <input id="guide-search" type="search" placeholder="Filter the guide (e.g. inbound, DMS, upsell)…"
+            class="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm mb-4 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"/>
+          <article id="guide" class="prose bg-white rounded-2xl border border-gray-100 p-6">Loading…</article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASK -->
+    <section id="tab-ask" class="hidden">
+      <div class="max-w-3xl mx-auto bg-white rounded-2xl border border-gray-100 flex flex-col" style="height: calc(100vh - 9rem)">
+        <div id="chat" class="chat flex-1 overflow-y-auto p-5 space-y-4">
+          <div class="text-sm text-gray-500">
+            Ask anything about how we use HubSpot. Answers come only from the guide.
+            <div class="flex flex-wrap gap-2 mt-3" id="suggestions"></div>
+          </div>
+        </div>
+        <form id="ask-form" class="border-t border-gray-100 p-3 flex gap-2">
+          <input id="question" autocomplete="off" placeholder="e.g. How do I create an upsell deal?"
+            class="flex-1 border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"/>
+          <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 rounded-lg disabled:opacity-50" id="ask-btn">Ask</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- DEALS -->
+    <section id="tab-deals" class="hidden">
+      <div class="bg-white rounded-2xl border border-gray-100 p-4 flex flex-wrap gap-3 items-end mb-4">
+        <label class="text-sm flex-1 min-w-[200px]">
+          <span class="block text-xs text-gray-500 mb-1">Sales rep</span>
+          <select id="owner" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white"><option>Loading…</option></select>
+        </label>
+        <label class="text-sm">
+          <span class="block text-xs text-gray-500 mb-1">Deals created or closed in the last</span>
+          <select id="days" class="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white">
+            <option value="30">30 days</option><option value="90" selected>90 days</option><option value="180">180 days</option><option value="365">12 months</option>
+          </select>
+        </label>
+        <button id="review-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg disabled:opacity-50">Review my deals</button>
+      </div>
+      <div id="summary" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4"></div>
+      <div class="flex gap-2 mb-3 text-xs hidden" id="filters">
+        <button data-f="issues" class="filt px-3 py-1 rounded-full border">With issues</button>
+        <button data-f="all" class="filt px-3 py-1 rounded-full border">All deals</button>
+      </div>
+      <div id="deals" class="space-y-3"></div>
+    </section>
+  </main>
+
+<script>
+const $ = s => document.querySelector(s);
+const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function api(url, opts) {
+  const r = await fetch(url, opts);
+  if (r.status === 401) { location.href = '/login'; return; }
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || r.statusText);
+  return data;
+}
+
+// ── Tabs ──
+function showTab(name) {
+  document.querySelectorAll('section[id^=tab-]').forEach(s => s.classList.toggle('hidden', s.id !== 'tab-' + name));
+  document.querySelectorAll('.tab').forEach(b => {
+    const on = b.dataset.tab === name;
+    b.classList.toggle('bg-white', on); b.classList.toggle('shadow-sm', on); b.classList.toggle('font-medium', on);
+  });
+  try { localStorage.setItem('tab', name); } catch (e) {}
+  if (name === 'deals') loadOwners();
+}
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+
+// ── Guide ──
+let guideLoaded = false;
+async function loadGuide() {
+  const { markdown } = await api('/api/guide');
+  const el = $('#guide');
+  el.innerHTML = marked.parse(markdown);
+  const toc = [];
+  el.querySelectorAll('h1, h2').forEach(h => {
+    h.id = slug(h.textContent);
+    toc.push(`<a href="#${h.id}" class="block ${h.tagName === 'H1' ? 'font-semibold text-gray-800 mt-3' : 'pl-3 text-gray-500 hover:text-indigo-600'} py-0.5">${esc(h.textContent)}</a>`);
+  });
+  $('#toc').innerHTML = toc.join('');
+  guideLoaded = true;
+}
+
+function goToSection(id) {
+  showTab('guide');
+  $('#guide-search').value = ''; filterGuide('');
+  const h = document.getElementById(id);
+  if (!h) return;
+  h.scrollIntoView({ behavior: 'smooth' });
+  h.classList.add('flash'); setTimeout(() => h.classList.remove('flash'), 1500);
+}
+
+// Filter: keep only h2 sections whose text matches
+function filterGuide(q) {
+  q = q.trim().toLowerCase();
+  let show = true, h1 = null;
+  [...$('#guide').children].forEach(node => {
+    if (node.tagName === 'H1') { h1 = node; node.style.display = q ? 'none' : ''; return; }
+    if (node.tagName === 'H2') {
+      let text = node.textContent, n = node.nextElementSibling;
+      while (n && !['H1', 'H2'].includes(n.tagName)) { text += ' ' + n.textContent; n = n.nextElementSibling; }
+      show = !q || text.toLowerCase().includes(q);
+      if (show && q && h1) h1.style.display = '';
+    }
+    if (node.tagName === 'HR') { node.style.display = q ? 'none' : ''; return; }
+    node.style.display = show ? '' : 'none';
+  });
+}
+$('#guide-search').oninput = e => filterGuide(e.target.value);
+
+// ── Q&A ──
+const history = [];
+const SUGGESTIONS = ['How do I create an upsell deal?', 'Disqualified or not pursuing?', 'What must be filled before Closed Won?', 'Can I create a deal directly from an inbound?'];
+$('#suggestions').innerHTML = SUGGESTIONS.map(s => `<button class="sugg border border-gray-200 rounded-full px-3 py-1 text-xs hover:bg-gray-50">${esc(s)}</button>`).join('');
+document.querySelectorAll('.sugg').forEach(b => b.onclick = () => { $('#question').value = b.textContent; $('#ask-form').requestSubmit(); });
+
+function bubble(role, html) {
+  const d = document.createElement('div');
+  d.className = role === 'user' ? 'flex justify-end' : 'flex';
+  d.innerHTML = `<div class="${role === 'user' ? 'bg-indigo-600 text-white' : 'bg-gray-50 border border-gray-100 prose'} rounded-2xl px-4 py-2.5 max-w-[85%] text-sm">${html}</div>`;
+  $('#chat').appendChild(d); $('#chat').scrollTop = $('#chat').scrollHeight;
+  return d;
+}
+
+$('#ask-form').onsubmit = async e => {
+  e.preventDefault();
+  const q = $('#question').value.trim();
+  if (!q) return;
+  $('#question').value = ''; $('#ask-btn').disabled = true;
+  bubble('user', esc(q));
+  const pending = bubble('assistant', '<span class="text-gray-400">Looking in the guide…</span>');
+  try {
+    const { answer } = await api('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: q, history }) });
+    pending.firstChild.innerHTML = marked.parse(answer);
+    history.push({ role: 'user', content: q }, { role: 'assistant', content: answer });
+  } catch (err) {
+    pending.firstChild.innerHTML = `<span class="text-red-500">${esc(err.message)}</span>`;
+  }
+  $('#ask-btn').disabled = false; $('#question').focus();
+};
+
+// ── My deals ──
+let ownersLoaded = false, lastDeals = [], filterMode = 'issues';
+async function loadOwners() {
+  if (ownersLoaded) return;
+  try {
+    const { owners } = await api('/api/owners');
+    let saved = null; try { saved = localStorage.getItem('owner'); } catch (e) {}
+    $('#owner').innerHTML = '<option value="">Choose your name…</option>' +
+      owners.map(o => `<option value="${o.id}" ${o.id === saved ? 'selected' : ''}>${esc(o.name)} (${esc(o.teams.join(', '))})</option>`).join('');
+    ownersLoaded = true;
+  } catch (err) { $('#owner').innerHTML = `<option>${esc(err.message)}</option>`; }
+}
+
+$('#review-btn').onclick = async () => {
+  const owner = $('#owner').value;
+  if (!owner) return;
+  try { localStorage.setItem('owner', owner); } catch (e) {}
+  $('#review-btn').disabled = true;
+  $('#deals').innerHTML = '<p class="text-sm text-gray-400">Reviewing your deals in HubSpot…</p>';
+  $('#summary').innerHTML = '';
+  try {
+    const data = await api(`/api/my-deals?owner_id=${owner}&days=${$('#days').value}`);
+    lastDeals = data.deals;
+    const s = data.summary;
+    const tile = (label, val, cls) => `<div class="bg-white rounded-xl border border-gray-100 p-3"><div class="text-2xl font-bold ${cls}">${val}</div><div class="text-xs text-gray-500">${label}</div></div>`;
+    $('#summary').innerHTML = tile('Deals reviewed', s.deals, 'text-gray-800') + tile('Clean deals', s.clean, 'text-emerald-600') +
+      tile('Errors', s.errors, 'text-red-600') + tile('Warnings', s.warnings, 'text-amber-600');
+    $('#filters').classList.remove('hidden');
+    renderDeals();
+  } catch (err) {
+    $('#deals').innerHTML = `<p class="text-sm text-red-500">${esc(err.message)}</p>`;
+  }
+  $('#review-btn').disabled = false;
+};
+
+document.querySelectorAll('.filt').forEach(b => b.onclick = () => { filterMode = b.dataset.f; renderDeals(); });
+
+function renderDeals() {
+  document.querySelectorAll('.filt').forEach(b => {
+    const on = b.dataset.f === filterMode;
+    b.classList.toggle('bg-indigo-600', on); b.classList.toggle('text-white', on); b.classList.toggle('border-indigo-600', on);
+  });
+  const list = filterMode === 'issues' ? lastDeals.filter(d => d.flags.length) : lastDeals;
+  if (!list.length) {
+    $('#deals').innerHTML = `<div class="bg-white rounded-xl border border-gray-100 p-6 text-center text-sm text-gray-500">${lastDeals.length ? '🎉 No issues found. Well done!' : 'No deals in this period.'}</div>`;
+    return;
+  }
+  $('#deals').innerHTML = list.map(d => {
+    const amount = d.amount ? `${Number(d.amount).toLocaleString(undefined, { maximumFractionDigits: 0 })} ${esc(d.currency)}` : '';
+    const flags = d.flags.length ? d.flags.map(f => `
+      <li class="flex gap-2 items-start">
+        <span class="shrink-0 mt-0.5 text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded ${f.severity === 'error' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-700'}">${f.severity}</span>
+        <span class="flex-1">${esc(f.message)} <button class="text-indigo-600 hover:underline whitespace-nowrap" onclick="goToSection('${f.section}')">See the rule →</button></span>
+      </li>`).join('') : '<li class="text-emerald-600">✓ Follows the guidelines</li>';
+    return `<div class="bg-white rounded-xl border ${d.flags.some(f => f.severity === 'error') ? 'border-red-100' : 'border-gray-100'} p-4">
+      <div class="flex flex-wrap justify-between gap-2 mb-2">
+        <div class="min-w-0">
+          <div class="font-medium text-gray-800">${esc(d.name)}</div>
+          <div class="text-xs text-gray-400">${esc(d.pipeline)} · ${esc(d.stage)} · created ${esc(d.created)}${d.company ? ' · ' + esc(d.company) : ''}</div>
+        </div>
+        <div class="text-sm text-gray-500">${amount}</div>
+      </div>
+      <ul class="space-y-1.5 text-sm text-gray-700">${flags}</ul>
+    </div>`;
+  }).join('');
+}
+
+// ── Init ──
+loadGuide().catch(err => $('#guide').textContent = err.message);
+let startTab = 'guide'; try { startTab = localStorage.getItem('tab') || 'guide'; } catch (e) {}
+showTab(startTab);
+</script>
+</body>
+</html>
