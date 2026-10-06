@@ -306,7 +306,7 @@ def check_won_common(p, line_items):
 @app.route('/api/guide')
 @api_login_required
 def guide():
-    return jsonify({'markdown': GUIDE_MD})
+    return jsonify({'markdown': GUIDE_MD, 'qa_enabled': bool(os.environ.get('ANTHROPIC_API_KEY'))})
 
 
 @app.route('/api/owners')

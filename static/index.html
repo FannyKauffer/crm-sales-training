@@ -122,7 +122,12 @@ document.querySelectorAll('.tab').forEach(b => b.onclick = () => showTab(b.datas
 // ── Guide ──
 let guideLoaded = false;
 async function loadGuide() {
-  const { markdown } = await api('/api/guide');
+  const { markdown, qa_enabled } = await api('/api/guide');
+  // Q&A tab only shows once ANTHROPIC_API_KEY is configured on the server
+  if (!qa_enabled) {
+    document.querySelector('.tab[data-tab="ask"]').remove();
+    if (!$('#tab-ask').classList.contains('hidden')) showTab('guide');
+  }
   const el = $('#guide');
   el.innerHTML = marked.parse(markdown);
   const toc = [];
