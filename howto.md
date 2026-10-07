@@ -167,11 +167,21 @@ Contact: **Job title in English** and **Buying role** (several if needed).
 3. On each line item:
    - Discount → **Unit discount** (never edit the unit price)
    - **Term** = contract duration in months
-   - **Billing frequency** = Annually / Semi-annually / Quarterly / Monthly
-   - API deals: **Commitment type = Credit Pack**
+   - **Commitment type** and **Billing frequency** → pick the row matching the contract:
+
+| Contract | Commitment type | Billing frequency in HubSpot | How Finance bills |
+|---|---|---|---|
+| **API, price per car or price per image** (minimum number of cars/images per year) | **Minimum commitment** | **Annually** | Monthly, on actual consumption |
+| **Upfront payment** of a number of cars/images | **Credit pack** (only for upfront payments) | Annually (upfront) | Upfront at signature, then overconsumption |
+| **No commitment** | **PayG** | | On consumption |
+| **Flat monthly fee** (location or group subscription) | **Flat rate monthly** (standard) | Monthly | Monthly flat fee |
+| Flat annual fee | **Flat rate annually**: avoid it | | |
+
 4. HQ pays for all locations → **one quote** on the parent. Each location pays → **one deal and one quote per location**.
 
-🚨 **Never "One-time" billing** on a subscription (especially API): it doesn't count as recurring revenue, so the deal won't appear in your signings or bonus. Only set-up fees are one-time.
+💡 **Minimum commitment set to Annually** shows the full commitment on the quote, even though Finance bills monthly on consumption. Add a comment to the buyer to clarify that billing is monthly.
+
+🚨 **One-time is only for non-recurring items** (e.g. set-up fees). A subscription billed One-time doesn't count as recurring revenue, so the deal won't appear in your signings or bonus.
 
 # Close
 

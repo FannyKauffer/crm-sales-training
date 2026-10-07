@@ -191,8 +191,15 @@ Each stage has mandatory fields (gates). Fill them when you move the deal, not a
 
 - Add line items **from the product library** (right folder, right language, right **tier** from the pricing grid).
 - Apply discounts with **Unit discount**, never by editing the unit price.
-- Set **Term (months)** to the contract duration. API deals: Commitment type = Credit Pack.
-- 🚨 **Never set billing frequency to "One-time" for API deals** (or any recurring product). One-time is not counted as recurring revenue: the deal won't appear in your signings or bonus. Use Annually / Semi-annually / Quarterly / Monthly.
+- Set **Term (months)** to the contract duration.
+- **Commitment type** (source: Notion "Quotes / line items creation"):
+  - **Minimum commitment**: API, price-per-car and price-per-image contracts. Set **Billing frequency = Annually** so the full commitment shows on the quote; Finance still bills monthly on actual consumption (add a comment to the buyer to clarify).
+  - **Credit pack**: only for upfront payments.
+  - **PayG**: no commitment.
+  - **Flat rate monthly**: the standard option for monthly flat-rate contracts.
+  - **Flat rate annually**: should generally be avoided.
+  - Finance bills PayG and Minimum commitment contracts on consumption.
+- 🚨 **One-time is only for non-recurring items** (e.g. set-up fees). One-time is not counted as recurring revenue: the deal won't appear in your signings or bonus.
 - Deal amount (ARR) = recurring line items only. Set-up fees are excluded.
 - One deal/quote on the Parent if HQ pays for everyone; one deal/quote per Child if each rooftop pays.
 
