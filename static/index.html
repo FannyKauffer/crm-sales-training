@@ -188,7 +188,7 @@ async function loadChecks() {
       : '<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase bg-amber-50 text-amber-700">Warning</span>';
     // scope = "<deal status> · <pipeline>": one block per status, one table per pipeline
     const STATUS_INFO = {
-      'Signed deals': 'Closed won, Onboarding, Contract is live, Contract has expired. This is where data must be complete.',
+      'Signed deals': 'Closed won, Onboarding, Contract is live. This is where data must be complete. Expired contracts are not checked.',
       'Open deals': 'Still in the sales pipeline: only pipeline-choice mistakes are flagged.',
       'Lost deals': 'Closed lost, Rejected by AE, Churned.',
     };
