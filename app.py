@@ -70,7 +70,7 @@ DEAL_PROPS = [
     'dealname', 'pipeline', 'dealstage', 'hubspot_owner_id', 'createdate', 'closedate', 'amount',
     'deal_currency_code', 'number_of_dealerships', 'number_of_locations_concerned_by_this_deal',
     'oem_brand', 'cars__product', 'company_legal_name', 'dms_ims_multiple_checkboxes',
-    'renewal_type', 'num_associated_contacts',
+    'renewal_type', 'num_associated_contacts', 'hs_num_of_associated_line_items',
     'closed_lost_reason', 'closed_lost_reason___category',
 ]
 
@@ -239,13 +239,15 @@ def search_owner_deals(s, owner_id, since):
     return list({d['id']: d for d in deals}.values())
 
 
-def batch_associations(s, from_type, to_type, ids):
-    """Returns {from_id: [{'id': to_id, 'type_ids': {...}}]}."""
+def batch_associations(s, from_type, to_type, ids, errors=None):
+    """Returns {from_id: [{'id': to_id, 'type_ids': {...}}]}. Failed calls are appended to `errors`."""
     out = {}
     url = f'{BASE}/crm/v4/associations/{from_type}/{to_type}/batch/read'
     for i in range(0, len(ids), 100):
         chunk = ids[i:i + 100]
         resp = s.post(url, json={'inputs': [{'id': str(x)} for x in chunk]}, timeout=30)
+        if not resp.ok and resp.status_code != 207 and errors is not None:
+            errors.append(resp.status_code)
         if resp.ok:
             for item in resp.json().get('results', []):
                 out[str(item['from']['id'])] = [
@@ -257,7 +259,8 @@ def batch_associations(s, from_type, to_type, ids):
     return out
 
 
-def batch_read(s, object_type, ids, props):
+def batch_read(s, object_type, ids, props, errors=None):
+    """Returns {id: properties}. Failed calls are appended to `errors`."""
     out = {}
     ids = list(ids)
     for i in range(0, len(ids), 100):
@@ -265,6 +268,8 @@ def batch_read(s, object_type, ids, props):
         resp = s.post(f'{BASE}/crm/v3/objects/{object_type}/batch/read', json={
             'inputs': [{'id': str(x)} for x in chunk], 'properties': props,
         }, timeout=30)
+        if not resp.ok and resp.status_code != 207 and errors is not None:
+            errors.append(resp.status_code)
         if resp.ok:
             for r in resp.json().get('results', []):
                 out[str(r['id'])] = r.get('properties', {})
@@ -340,6 +345,7 @@ def flag(check_id, detail=None):
 
 
 def check_deal(p, companies, line_items, has_parent_deal):
+    """companies / line_items / has_parent_deal are None when HubSpot could not be read: dependent checks are skipped."""
     pipeline, stage = p.get('pipeline'), p.get('dealstage')
     name = p.get('dealname') or ''
     flags = []
@@ -361,7 +367,7 @@ def check_deal(p, companies, line_items, has_parent_deal):
                 flags.append(flag('nb_products'))
             if not p.get('company_legal_name'):
                 flags.append(flag('nb_legal_name'))
-            if not companies:
+            if companies == []:
                 flags.append(flag('nb_no_company'))
             if to_int(p.get('num_associated_contacts')) in (None, 0):
                 flags.append(flag('nb_no_contact'))
@@ -371,7 +377,7 @@ def check_deal(p, companies, line_items, has_parent_deal):
 
         # Open NB deal on a company that is already an active client → probably an upsell
         if not won and not lost:
-            active = [c['name'] for c in companies if (c.get('company_activity_status') or '').lower() == 'active']
+            active = [c['name'] for c in companies or [] if (c.get('company_activity_status') or '').lower() == 'active']
             if active:
                 flags.append(flag('nb_active_client', f'{", ".join(active)} is already an active client: if this replaces their contract it belongs in Renewals & upsells'))
 
@@ -383,7 +389,7 @@ def check_deal(p, companies, line_items, has_parent_deal):
         if won:
             if not p.get('renewal_type'):
                 flags.append(flag('ren_type'))
-            if not has_parent_deal:
+            if has_parent_deal is False:
                 flags.append(flag('ren_parent'))
             if 'new deal' in name.lower():
                 flags.append(flag('ren_new_deal_name'))
@@ -400,9 +406,11 @@ def check_won_common(p, line_items):
     if 'Other' in dms:
         flags.append(flag('won_dms_other'))
 
-    if not line_items:
+    # Line item count is stored on the deal itself: reliable even when line items can't be read
+    count = to_int(p.get('hs_num_of_associated_line_items'))
+    if count == 0 or (count is None and line_items == []):
         flags.append(flag('won_no_line_items'))
-    else:
+    if line_items:
         is_api = 'API' in (p.get('cars__product') or '').split(';')
         one_time = [li for li in line_items
                     if not li.get('recurringbillingfrequency') and 'setup' not in (li.get('name') or '').lower().replace('-', '').replace(' ', '')]
@@ -481,23 +489,35 @@ def my_deals():
     ids = [d['id'] for d in raw]
 
     stage_labels = get_stage_labels(s)
-    deal_companies = batch_associations(s, 'deals', 'companies', ids)
-    deal_line_items = batch_associations(s, 'deals', 'line_items', ids)
+    co_err, li_err, dd_err = [], [], []
+    deal_companies = batch_associations(s, 'deals', 'companies', ids, co_err)
+    deal_line_items = batch_associations(s, 'deals', 'line_items', ids, li_err)
     ren_ids = [d['id'] for d in raw if d['properties'].get('pipeline') == REN_PIPELINE]
-    deal_deals = batch_associations(s, 'deals', 'deals', ren_ids)
+    deal_deals = batch_associations(s, 'deals', 'deals', ren_ids, dd_err)
 
     company_ids = {a['id'] for lst in deal_companies.values() for a in lst}
-    companies = batch_read(s, 'companies', company_ids, ['name', 'company_activity_status'])
+    companies = batch_read(s, 'companies', company_ids, ['name', 'company_activity_status'], co_err)
     li_ids = {a['id'] for lst in deal_line_items.values() for a in lst}
-    line_items = batch_read(s, 'line_items', li_ids, ['name', 'recurringbillingfrequency', 'hs_recurring_billing_period'])
+    line_items = batch_read(s, 'line_items', li_ids, ['name', 'recurringbillingfrequency', 'hs_recurring_billing_period'], li_err)
+
+    # Never report an issue we could not verify: say what was skipped instead
+    notices = []
+    if co_err:
+        notices.append(f'Companies could not be read from HubSpot (HTTP {co_err[0]}): company checks were skipped. '
+                       'The HubSpot token needs the crm.objects.companies.read scope.')
+    if li_err:
+        notices.append(f'Line item details could not be read from HubSpot (HTTP {li_err[0]}): "One-time" and "Term" checks were skipped. '
+                       'The HubSpot token needs the crm.objects.line_items.read scope (or e-commerce).')
+    if dd_err:
+        notices.append(f'Links between deals could not be read from HubSpot (HTTP {dd_err[0]}): the "Parent deal" check was skipped.')
 
     results = []
     for d in raw:
         p = d['properties']
         did = str(d['id'])
-        cos = [{'id': a['id'], **companies.get(a['id'], {})} for a in deal_companies.get(did, [])]
-        lis = [line_items[a['id']] for a in deal_line_items.get(did, []) if a['id'] in line_items]
-        has_parent = any(PARENT_DEAL_TYPE_ID in a['type_ids'] for a in deal_deals.get(did, []))
+        cos = None if co_err else [{'id': a['id'], **companies.get(a['id'], {})} for a in deal_companies.get(did, [])]
+        lis = None if li_err else [line_items[a['id']] for a in deal_line_items.get(did, []) if a['id'] in line_items]
+        has_parent = None if dd_err else any(PARENT_DEAL_TYPE_ID in a['type_ids'] for a in deal_deals.get(did, []))
         flags = check_deal(p, cos, lis, has_parent)
         results.append({
             'id': did,
@@ -507,7 +527,7 @@ def my_deals():
             'created': (p.get('createdate') or '')[:10],
             'amount': p.get('amount'),
             'currency': p.get('deal_currency_code') or '',
-            'company': ', '.join(c.get('name') or '' for c in cos),
+            'company': ', '.join(c.get('name') or '' for c in cos or []),
             'url': HUBSPOT_DEAL_URL.format(id=did),
             'flags': flags,
         })
@@ -519,6 +539,7 @@ def my_deals():
     n_warn = sum(1 for r in results for f in r['flags'] if f['severity'] == 'warning')
     return jsonify({
         'deals': results,
+        'notices': notices,
         'summary': {'deals': len(results), 'clean': sum(1 for r in results if not r['flags']),
                     'errors': n_err, 'warnings': n_warn, 'days': days},
     })

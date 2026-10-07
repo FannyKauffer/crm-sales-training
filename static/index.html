@@ -132,6 +132,7 @@
         <button id="review-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg disabled:opacity-50">Review my deals</button>
       </div>
       <div id="summary" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4"></div>
+      <div id="notices" class="space-y-2 mb-4"></div>
       <div class="flex gap-2 mb-3 text-xs hidden" id="filters">
         <button data-f="issues" class="filt px-3 py-1 rounded-full border">With issues</button>
         <button data-f="all" class="filt px-3 py-1 rounded-full border">All deals</button>
@@ -430,6 +431,8 @@ $('#review-btn').onclick = async () => {
     $('#summary').innerHTML = tile('Deals reviewed', s.deals, 'text-gray-800') + tile('Clean deals', s.clean, 'text-emerald-600') +
       tile('Errors', s.errors, 'text-red-600') + tile('Warnings', s.warnings, 'text-amber-600');
     $('#filters').classList.remove('hidden');
+    $('#notices').innerHTML = (data.notices || []).map(n =>
+      `<div class="bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-xl px-4 py-2.5">⚠️ ${esc(n)}</div>`).join('');
     renderDeals();
   } catch (err) {
     $('#deals').innerHTML = `<p class="text-sm text-red-500">${esc(err.message)}</p>`;
