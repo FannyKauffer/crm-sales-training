@@ -23,6 +23,10 @@
     .howto ol > li { margin: .35rem 0; padding-left: .25rem; }
     .howto ol > li::marker { color: #4f46e5; font-weight: 700; }
     .howto p strong:first-child { color: #111827; }
+    /* "> 🛑 ..." lines in a how-to body render as a red alert box */
+    .howto blockquote { margin: 1rem 0; padding: .85rem 1rem; border-left: 4px solid #dc2626; background: #fef2f2; border-radius: .5rem; }
+    .howto blockquote p { margin: 0; color: #7f1d1d; font-size: .95rem; }
+    .howto blockquote strong { color: #991b1b !important; }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen">

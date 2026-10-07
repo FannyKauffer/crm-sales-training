@@ -4,6 +4,8 @@
 
 > From first contact to live client: which object and which pipeline to use at each step.
 
+> 🛑 **Your job stops at Closed won.** **Onboarding**, **Contract is live** and **Contract has expired** are set **automatically** by HubSpot. **Never move a deal to these stages yourself**: it can break the onboarding, subscription and billing automations.
+
 **1. Prospecting happens on the LEAD** (pipeline *New leads*)
 
 New / attempting → Contacted → Engaged → Meeting scheduled → **Qualified** ⭐ (creates the deal) — or Disqualified / Not pursuing.
@@ -15,7 +17,7 @@ New / attempting → Contacted → Engaged → Meeting scheduled → **Qualified
 | Use it for | New client, new location with its own contract, new showroom | Anything that **cancels and replaces** an existing contract: renewal, upsell, downsell, amendment |
 | Stages | Qualification call → Demo → Testing → Negotiation / Trade → **Closed won** / Closed lost | Deal created → Client informed → Discussion scheduled → Negotiation / Trade → Contract sent → **Closed won** / Churned |
 
-**3. After Closed won, automation takes over:** Onboarding → Contract is live → Contract has expired. You don't move these stages yourself.
+**3. After Closed won, automation takes over:** Onboarding → Contract is live → Contract has expired. 🛑 **Hands off: never move these stages yourself.**
 
 **What each New business stage means**
 
@@ -165,6 +167,8 @@ Prospect booked through the AE's link? **Log a meeting** on the lead (Outcome *S
    - Standing inventory interest (one-time fee)
    - Anything else the CSM should know
 4. Contract signed **outside HubSpot** (paper, email)? Deal → View all properties → **Customer procurement process = Yes**, otherwise onboarding never starts.
+
+> 🛑 **Stop at Closed won.** HubSpot moves the deal to **Onboarding**, then **Contract is live**, on its own. **Never move it there yourself**: it can break the onboarding, subscription and billing automations.
 
 ## ❌ Close lost or disqualify
 
