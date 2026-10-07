@@ -185,8 +185,8 @@ Contact: **Job title in English** and **Buying role** (several if needed).
    - **is multi-location deal?**
    - **DMS** (avoid "Other")
    - **Affiliated brands**
-   - **Revoke auto-renew?** (Yes only if the client wants to renew manually)
-3. Add a **pinned note** for the CSM:
+   - **Revoke auto-renew?** only if the client wants to renew manually: set it to Yes. Otherwise leave it empty.
+3. Recommended: add a **pinned note** for the CSM:
    - Operational contact (name, role, email, phone)
    - Single or multi-location, specifics per site
    - Features to activate or not (Next gen 360, Stock images, Shotlist, Hotspots…)

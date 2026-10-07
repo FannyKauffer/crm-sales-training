@@ -67,7 +67,7 @@ DEAL_PROPS = [
     'dealname', 'pipeline', 'dealstage', 'hubspot_owner_id', 'createdate', 'closedate', 'amount',
     'deal_currency_code', 'number_of_dealerships', 'number_of_locations_concerned_by_this_deal',
     'oem_brand', 'cars__product', 'company_legal_name', 'dms_ims_multiple_checkboxes',
-    'revoke_auto_renew', 'renewal_type', 'num_associated_contacts', 'hs_pinned_engagement_id',
+    'renewal_type', 'num_associated_contacts',
     'closed_lost_reason', 'closed_lost_reason___category',
 ]
 
@@ -309,10 +309,6 @@ CHECKS = [
     # Both pipelines — signed deals
     {'id': 'won_dms_other', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
      'title': 'DMS set to "Other"', 'why': 'Be specific: the CSM needs the real DMS.'},
-    {'id': 'won_auto_renew', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
-     'title': '"Revoke auto-renew?" is empty', 'why': 'It defines the renewal rules.'},
-    {'id': 'won_pinned_note', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
-     'title': 'No pinned handover note for the CSM', 'why': 'Operational contact, locations, features to activate… so onboarding can start.'},
     {'id': 'won_no_line_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'No line items', 'why': 'No line items = no ARR and no subscription.'},
     {'id': 'won_one_time', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
@@ -404,10 +400,6 @@ def check_won_common(p, line_items):
     dms = (p.get('dms_ims_multiple_checkboxes') or '').split(';')
     if 'Other' in dms:
         flags.append(flag('won_dms_other'))
-    if not p.get('revoke_auto_renew'):
-        flags.append(flag('won_auto_renew'))
-    if not p.get('hs_pinned_engagement_id'):
-        flags.append(flag('won_pinned_note'))
 
     if not line_items:
         flags.append(flag('won_no_line_items'))
