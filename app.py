@@ -291,8 +291,6 @@ CHECKS = [
      'title': '"[Cars] Products" is empty', 'why': 'Say what is being sold: App, API, 360…'},
     {'id': 'nb_legal_name', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': '"[CC] Company legal name" is empty', 'why': 'Printed on the invoice.'},
-    {'id': 'nb_brands', 'scope': 'Signed deals · New business', 'severity': 'warning', 'section': 'Create a deal',
-     'title': '"Affiliated brands" is empty', 'why': 'Official franchise brands only.'},
     {'id': 'nb_no_company', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No company associated to the deal', 'why': 'Every deal must be linked to its company (and to every location it covers).'},
     {'id': 'nb_no_contact', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
@@ -360,8 +358,6 @@ def check_deal(p, companies, line_items, has_parent_deal):
                 flags.append(flag('nb_products'))
             if not p.get('company_legal_name'):
                 flags.append(flag('nb_legal_name'))
-            if not p.get('oem_brand'):
-                flags.append(flag('nb_brands'))
             if not companies:
                 flags.append(flag('nb_no_company'))
             if to_int(p.get('num_associated_contacts')) in (None, 0):
