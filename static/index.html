@@ -146,6 +146,7 @@
         <p class="text-sm text-gray-500 mt-1">Every issue we flag on your deals, why it matters and how to fix it.
           <span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase bg-red-50 text-red-600 ml-1">Error</span> must be fixed ·
           <span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase bg-amber-50 text-amber-700">Warning</span> should be checked.</p>
+        <p class="text-sm text-gray-500 mt-1">Deals still in the sales pipeline are not checked: data must be complete <b>once the deal is signed</b> (Closed won and after).</p>
       </div>
       <div id="checks" class="space-y-5">Loading…</div>
     </section>
@@ -198,7 +199,7 @@ async function loadChecks() {
                 <div class="font-medium text-gray-800">${esc(c.title)}</div>
                 <div class="text-xs text-gray-500 mt-0.5">${esc(c.why)}</div>
               </td>
-              <td class="py-3 pr-4 whitespace-nowrap w-56">${sev(c.severity)}${c.severity_won ? ` <span class="text-[10px] text-gray-400">→</span> ${sev(c.severity_won)} <span class="text-[10px] text-gray-400">once won</span>` : ''}</td>
+              <td class="py-3 pr-4 whitespace-nowrap w-56">${sev(c.severity)}</td>
               <td class="py-3 pr-4 whitespace-nowrap text-right w-32"><button class="text-indigo-600 hover:underline text-xs" onclick="goToSection('${c.section}')">How to fix it →</button></td>
             </tr>`).join('')}
         </table>

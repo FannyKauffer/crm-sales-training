@@ -280,49 +280,48 @@ def to_int(v):
 # scope: where the check applies; severity: error | warning; section: how-to card to fix it.
 
 CHECKS = [
-    # New business — every stage
-    {'id': 'nb_total_dealerships', 'scope': 'New business · all stages', 'severity': 'error', 'section': 'Create a deal',
+    # New business — signed deals (Closed won and after)
+    {'id': 'nb_total_dealerships', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
      'title': '"Total number of dealerships in group" is empty', 'why': 'Needed to measure group coverage. Set 1 if single location.'},
-    {'id': 'nb_deal_dealerships', 'scope': 'New business · all stages', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_deal_dealerships', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
      'title': '"Number of dealerships involved in this deal" is empty', 'why': 'Tells how many locations this contract covers. Set 1 if single location.'},
-    {'id': 'nb_deal_gt_group', 'scope': 'New business · all stages', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_deal_gt_group', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
      'title': 'More dealerships in the deal than in the group', 'why': 'A deal cannot cover more locations than the group has: one of the two numbers is wrong.'},
-    {'id': 'nb_products', 'scope': 'New business · all stages', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_products', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
      'title': '"[Cars] Products" is empty', 'why': 'Say what is being sold: App, API, 360…'},
-    {'id': 'nb_legal_name', 'scope': 'New business · all stages', 'severity': 'warning', 'severity_won': 'error', 'section': 'Create a deal',
-     'title': '"[CC] Company legal name" is empty', 'why': 'Printed on the invoice. Warning while open, error once won.'},
-    {'id': 'nb_brands', 'scope': 'New business · all stages', 'severity': 'warning', 'section': 'Create a deal',
+    {'id': 'nb_legal_name', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
+     'title': '"[CC] Company legal name" is empty', 'why': 'Printed on the invoice.'},
+    {'id': 'nb_brands', 'scope': 'New business · Closed won and after', 'severity': 'warning', 'section': 'Create a deal',
      'title': '"Affiliated brands" is empty', 'why': 'Official franchise brands only.'},
-    {'id': 'nb_no_company', 'scope': 'New business · all stages', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_no_company', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No company associated to the deal', 'why': 'Every deal must be linked to its company (and to every location it covers).'},
-    {'id': 'nb_no_contact', 'scope': 'New business · all stages', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_no_contact', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No contact associated to the deal', 'why': 'Every deal must be linked to a contact.'},
+    {'id': 'nb_won_dms', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Close a deal as won',
+     'title': 'DMS is empty', 'why': 'The CSM needs the DMS for the technical integration.'},
     {'id': 'nb_active_client', 'scope': 'New business · open deals', 'severity': 'warning', 'section': 'Create an upsell, downsell or amendment',
      'title': 'Open deal on a company that is already an active client', 'why': 'If it replaces their current contract, it belongs in Renewals & upsells.'},
-    # New business — won
-    {'id': 'nb_won_dms', 'scope': 'New business · won', 'severity': 'error', 'section': 'Close a deal as won',
-     'title': 'DMS is empty', 'why': 'The CSM needs the DMS for the technical integration.'},
-    # Renewals & upsells — every stage
-    {'id': 'ren_type', 'scope': 'Renewals & upsells · all stages', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
+    # Renewals & upsells — signed deals
+    {'id': 'ren_type', 'scope': 'Renewals & upsells · Closed won and after', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
      'title': '"Renewal type" is empty', 'why': 'Upsell, downsell, amendment… drives how the contract is replaced.'},
-    {'id': 'ren_parent', 'scope': 'Renewals & upsells · all stages', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
+    {'id': 'ren_parent', 'scope': 'Renewals & upsells · Closed won and after', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
      'title': 'Not linked to the previous deal with the "Parent deal" label', 'why': 'Without it the old contract is not stopped and the client can be billed twice.'},
-    {'id': 'ren_new_deal_name', 'scope': 'Renewals & upsells · all stages', 'severity': 'warning', 'section': 'Create an upsell, downsell or amendment',
+    {'id': 'ren_new_deal_name', 'scope': 'Renewals & upsells · Closed won and after', 'severity': 'warning', 'section': 'Create an upsell, downsell or amendment',
      'title': 'Named "New Deal" but in Renewals & upsells', 'why': 'Check it really replaces an existing contract and is not new business.'},
-    # Won — both pipelines
-    {'id': 'won_dms_other', 'scope': 'Won · both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
+    # Both pipelines — signed deals
+    {'id': 'won_dms_other', 'scope': 'Both pipelines · Closed won and after', 'severity': 'warning', 'section': 'Close a deal as won',
      'title': 'DMS set to "Other"', 'why': 'Be specific: the CSM needs the real DMS.'},
-    {'id': 'won_auto_renew', 'scope': 'Won · both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
+    {'id': 'won_auto_renew', 'scope': 'Both pipelines · Closed won and after', 'severity': 'warning', 'section': 'Close a deal as won',
      'title': '"Revoke auto-renew?" is empty', 'why': 'It defines the renewal rules.'},
-    {'id': 'won_pinned_note', 'scope': 'Won · both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
+    {'id': 'won_pinned_note', 'scope': 'Both pipelines · Closed won and after', 'severity': 'warning', 'section': 'Close a deal as won',
      'title': 'No pinned handover note for the CSM', 'why': 'Operational contact, locations, features to activate… so onboarding can start.'},
-    {'id': 'won_no_line_items', 'scope': 'Won · both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'won_no_line_items', 'scope': 'Both pipelines · Closed won and after', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'No line items', 'why': 'No line items = no ARR and no subscription.'},
-    {'id': 'won_one_time', 'scope': 'Won · both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'won_one_time', 'scope': 'Both pipelines · Closed won and after', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'Line item billed "One-time" (set-up fees excluded)', 'why': 'Flagged on API deals, or when every line item is one-time. Not counted as recurring revenue, so not in signings or bonus.'},
-    {'id': 'won_no_term', 'scope': 'Won · both pipelines', 'severity': 'warning', 'section': 'Build the quote and line items',
+    {'id': 'won_no_term', 'scope': 'Both pipelines · Closed won and after', 'severity': 'warning', 'section': 'Build the quote and line items',
      'title': 'Recurring line item without a Term', 'why': 'Term = contract duration in months.'},
-    {'id': 'won_amount', 'scope': 'Won · both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'won_amount', 'scope': 'Both pipelines · Closed won and after', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'Deal amount is empty or 0', 'why': 'The amount comes from the recurring line items.'},
     # Lost
     {'id': 'nb_lost_reason', 'scope': 'New business · Closed lost / Rejected by AE', 'severity': 'error', 'section': 'Close lost or disqualify',
@@ -333,11 +332,11 @@ CHECKS = [
 CHECKS_BY_ID = {c['id']: c for c in CHECKS}
 
 
-def flag(check_id, detail=None, won=False):
+def flag(check_id, detail=None):
     """A deal issue, described by its registry entry. `detail` replaces the title when it adds specifics."""
     c = CHECKS_BY_ID[check_id]
     return {'id': check_id,
-            'severity': c.get('severity_won', c['severity']) if won else c['severity'],
+            'severity': c['severity'],
             'message': detail or c['title'],
             'section': slug(c['section'])}
 
@@ -349,25 +348,30 @@ def check_deal(p, companies, line_items, has_parent_deal):
 
     if pipeline == NB_PIPELINE:
         won, lost = stage in NB_WON, stage in NB_LOST
-        total = to_int(p.get('number_of_dealerships'))
-        in_deal = to_int(p.get('number_of_locations_concerned_by_this_deal'))
 
-        if total is None:
-            flags.append(flag('nb_total_dealerships'))
-        if in_deal is None:
-            flags.append(flag('nb_deal_dealerships'))
-        if total is not None and in_deal is not None and in_deal > total:
-            flags.append(flag('nb_deal_gt_group', f'{in_deal} dealerships in the deal but only {total} in the group'))
-        if not p.get('cars__product'):
-            flags.append(flag('nb_products'))
-        if not p.get('company_legal_name'):
-            flags.append(flag('nb_legal_name', won=won))
-        if not p.get('oem_brand'):
-            flags.append(flag('nb_brands'))
-        if not companies:
-            flags.append(flag('nb_no_company'))
-        if to_int(p.get('num_associated_contacts')) in (None, 0):
-            flags.append(flag('nb_no_contact'))
+        # Data-entry checks only matter once the deal is signed (Closed won and after)
+        if won:
+            total = to_int(p.get('number_of_dealerships'))
+            in_deal = to_int(p.get('number_of_locations_concerned_by_this_deal'))
+            if total is None:
+                flags.append(flag('nb_total_dealerships'))
+            if in_deal is None:
+                flags.append(flag('nb_deal_dealerships'))
+            if total is not None and in_deal is not None and in_deal > total:
+                flags.append(flag('nb_deal_gt_group', f'{in_deal} dealerships in the deal but only {total} in the group'))
+            if not p.get('cars__product'):
+                flags.append(flag('nb_products'))
+            if not p.get('company_legal_name'):
+                flags.append(flag('nb_legal_name'))
+            if not p.get('oem_brand'):
+                flags.append(flag('nb_brands'))
+            if not companies:
+                flags.append(flag('nb_no_company'))
+            if to_int(p.get('num_associated_contacts')) in (None, 0):
+                flags.append(flag('nb_no_contact'))
+            if not (p.get('dms_ims_multiple_checkboxes') or ''):
+                flags.append(flag('nb_won_dms'))
+            flags += check_won_common(p, line_items)
 
         # Open NB deal on a company that is already an active client → probably an upsell
         if not won and not lost:
@@ -375,23 +379,18 @@ def check_deal(p, companies, line_items, has_parent_deal):
             if active:
                 flags.append(flag('nb_active_client', f'{", ".join(active)} is already an active client: if this replaces their contract it belongs in Renewals & upsells'))
 
-        if won:
-            flags += check_won_common(p, line_items)
-            if not (p.get('dms_ims_multiple_checkboxes') or ''):
-                flags.append(flag('nb_won_dms'))
-
         if lost and not (p.get('closed_lost_reason') or p.get('closed_lost_reason___category')):
             flags.append(flag('nb_lost_reason'))
 
     elif pipeline == REN_PIPELINE:
         won, lost = stage in REN_WON, stage in REN_LOST
-        if not p.get('renewal_type'):
-            flags.append(flag('ren_type'))
-        if not has_parent_deal:
-            flags.append(flag('ren_parent'))
-        if 'new deal' in name.lower():
-            flags.append(flag('ren_new_deal_name'))
         if won:
+            if not p.get('renewal_type'):
+                flags.append(flag('ren_type'))
+            if not has_parent_deal:
+                flags.append(flag('ren_parent'))
+            if 'new deal' in name.lower():
+                flags.append(flag('ren_new_deal_name'))
             flags += check_won_common(p, line_items)
         if lost and not (p.get('closed_lost_reason') or p.get('closed_lost_reason___category')):
             flags.append(flag('ren_lost_reason'))
