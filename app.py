@@ -32,8 +32,18 @@ HOWTO_MD = (Path(__file__).parent / 'howto.md').read_text(encoding='utf-8')     
 GUIDE_MD = (Path(__file__).parent / 'guidelines.md').read_text(encoding='utf-8')     # full reference
 
 # The tool targets US Account Executives. "My deals" lists exactly these people
-# (emails or full names as in HubSpot, comma-separated). Override with the SALES_REPS env var.
-DEFAULT_SALES_REPS = ''
+# (HubSpot owner IDs, emails or full names, comma-separated). Override with the SALES_REPS env var.
+DEFAULT_SALES_REPS = ','.join([
+    '35227458',  # Philip Tamez
+    '31039261',  # Brian Paugh
+    '30746930',  # Michael Lizza
+    '76005619',  # Andrea Godin
+    '29464368',  # Francisco Riba (active account)
+    '30676601',  # Joshua Shanks
+    '35550328',  # Jason Turner
+    '29929356',  # James Norris
+    '31130308',  # Zack (Zachary) Adamson
+])
 SALES_REPS = {r.strip().lower() for r in os.environ.get('SALES_REPS', DEFAULT_SALES_REPS).split(',') if r.strip()}
 
 # Fallback when SALES_REPS is empty: owners whose HubSpot team matches one of these words
@@ -380,7 +390,7 @@ def owners():
             teams = [t.get('name', '') for t in o.get('teams', []) or []]
             name = f"{o.get('firstName', '')} {o.get('lastName', '')}".strip() or o.get('email', '')
             if SALES_REPS:
-                if (o.get('email') or '').lower() not in SALES_REPS and name.lower() not in SALES_REPS:
+                if not {str(o['id']), (o.get('email') or '').lower(), name.lower()} & SALES_REPS:
                     continue
             elif not any(kw in re.split(r'[^a-z]+', t.lower()) for t in teams for kw in SALES_TEAM_KEYWORDS):
                 continue
