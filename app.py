@@ -312,7 +312,7 @@ CHECKS = [
     {'id': 'nb_no_contact', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No contact associated to the deal', 'why': 'Every deal must be linked to a contact.'},
     {'id': 'nb_no_showroom', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Build the quote and line items',
-     'title': 'No showroom line item (Closed won / Onboarding)', 'why': 'Every new business contract needs a showroom line item so onboarding can set it up.'},
+     'title': 'No showroom line item (Closed won / Onboarding)', 'why': 'Every new business contract needs a showroom line item so onboarding can set it up. Set-up fees only deals are not checked.'},
     {'id': 'nb_won_dms', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Close a deal as won',
      'title': 'DMS is empty', 'why': 'The CSM needs the DMS for the technical integration.'},
     # Renewals & upsells — signed deals
@@ -332,7 +332,7 @@ CHECKS = [
     {'id': 'won_no_term', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Build the quote and line items',
      'title': 'Recurring line item without a Term', 'why': 'Term = contract duration in months.'},
     {'id': 'won_duration', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Close a deal as won',
-     'title': '"Contract duration (in months)" is empty', 'why': 'Subscription end date and renewal workflows are calculated from it.'},
+     'title': '"Contract duration (in months)" is empty', 'why': 'Subscription end date and renewal workflows are calculated from it. Not required on set-up fees only deals.'},
     {'id': 'won_setup_only_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': '"Set-up fees only" deal with other line items', 'why': 'A set-up fees only deal may only contain showroom, integration or inventory processing fees, no subscription, flat fee or API.'},
     {'id': 'won_amount', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
@@ -387,7 +387,8 @@ def check_deal(p, companies, line_items, has_parent_deal):
                 flags.append(flag('nb_no_contact'))
             if not (p.get('dms_ims_multiple_checkboxes') or ''):
                 flags.append(flag('nb_won_dms'))
-            if stage in (NB_CLOSED_WON, NB_ONBOARDING) and line_items is not None \
+            setup_only = (p.get('setup_fees_only_no_recurring') or '').lower() == 'true'
+            if stage in (NB_CLOSED_WON, NB_ONBOARDING) and not setup_only and line_items is not None \
                     and not any('showroom' in (li.get('name') or '').lower() for li in line_items):
                 flags.append(flag('nb_no_showroom'))
             flags += check_won_common(p, line_items)
@@ -420,7 +421,7 @@ def check_deal(p, companies, line_items, has_parent_deal):
 def check_won_common(p, line_items):
     flags = []
     setup_only = (p.get('setup_fees_only_no_recurring') or '').lower() == 'true'
-    if to_int(p.get('contractdurationinmonths')) is None:
+    if not setup_only and to_int(p.get('contractdurationinmonths')) is None:
         flags.append(flag('won_duration'))
     if setup_only and line_items:
         wrong = [li.get('name') or '?' for li in line_items
