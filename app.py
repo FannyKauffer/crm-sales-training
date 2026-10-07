@@ -28,7 +28,8 @@ BASE  = 'https://api.hubapi.com'
 
 CLAUDE_MODEL = os.environ.get('CLAUDE_MODEL', 'claude-opus-5')
 
-GUIDE_MD = (Path(__file__).parent / 'guidelines.md').read_text(encoding='utf-8')
+HOWTO_MD = (Path(__file__).parent / 'howto.md').read_text(encoding='utf-8')        # action-oriented cards
+GUIDE_MD = (Path(__file__).parent / 'guidelines.md').read_text(encoding='utf-8')     # full reference
 
 # Owners are listed in the "Mes deals" picker when one of their HubSpot teams matches
 SALES_TEAM_KEYWORDS = [k.strip().lower() for k in
@@ -276,48 +277,48 @@ def check_deal(p, companies, line_items, has_parent_deal):
         in_deal = to_int(p.get('number_of_locations_concerned_by_this_deal'))
 
         if total is None:
-            flags.append(flag('error', '"Total number of dealerships in group" is empty (set 1 if single location).', 'Creating a deal'))
+            flags.append(flag('error', '"Total number of dealerships in group" is empty (set 1 if single location).', 'Create a deal'))
         if in_deal is None:
-            flags.append(flag('error', '"Number of dealerships involved in this deal" is empty (set 1 if single location).', 'Creating a deal'))
+            flags.append(flag('error', '"Number of dealerships involved in this deal" is empty (set 1 if single location).', 'Create a deal'))
         if total is not None and in_deal is not None and in_deal > total:
-            flags.append(flag('error', f'{in_deal} dealerships in the deal but only {total} in the group: the deal cannot cover more than the group.', 'Creating a deal'))
+            flags.append(flag('error', f'{in_deal} dealerships in the deal but only {total} in the group: the deal cannot cover more than the group.', 'Create a deal'))
         if not p.get('cars__product'):
-            flags.append(flag('error', '"[Cars] Products" is empty.', 'Creating a deal'))
+            flags.append(flag('error', '"[Cars] Products" is empty.', 'Create a deal'))
         if not p.get('company_legal_name'):
-            flags.append(flag('error' if won else 'warning', '"[CC] Company legal name" is empty (it is printed on the invoice).', 'Creating a deal'))
+            flags.append(flag('error' if won else 'warning', '"[CC] Company legal name" is empty (it is printed on the invoice).', 'Create a deal'))
         if not p.get('oem_brand'):
-            flags.append(flag('warning', '"Affiliated brands" is empty (official franchise brands only).', 'Creating a deal'))
+            flags.append(flag('warning', '"Affiliated brands" is empty (official franchise brands only).', 'Create a deal'))
         if not companies:
-            flags.append(flag('error', 'No company associated to the deal.', 'Creating a deal'))
+            flags.append(flag('error', 'No company associated to the deal.', 'Create a deal'))
         if to_int(p.get('num_associated_contacts')) in (None, 0):
-            flags.append(flag('error', 'No contact associated to the deal.', 'Creating a deal'))
+            flags.append(flag('error', 'No contact associated to the deal.', 'Create a deal'))
 
         # Open NB deal on a company that is already an active client → probably an upsell
         if not won and not lost:
             active = [c['name'] for c in companies if (c.get('company_activity_status') or '').lower() == 'active']
             if active:
-                flags.append(flag('warning', f'{", ".join(active)} is already an active client: if this is an upsell/renewal it belongs in the Renewals & upsells pipeline.', 'Renewals & upsells'))
+                flags.append(flag('warning', f'{", ".join(active)} is already an active client: if this is an upsell/renewal it belongs in the Renewals & upsells pipeline.', 'Create an upsell, downsell or amendment'))
 
         if won:
             flags += check_won_common(p, line_items)
             if not (p.get('dms_ims_multiple_checkboxes') or ''):
-                flags.append(flag('error', 'DMS is empty at Closed Won: the CSM needs it for the integration.', 'Handover to CSM'))
+                flags.append(flag('error', 'DMS is empty at Closed Won: the CSM needs it for the integration.', 'Close a deal as won'))
 
         if lost and not (p.get('closed_lost_reason') or p.get('closed_lost_reason___category')):
-            flags.append(flag('error', 'Closed lost without a lost reason.', 'Closed lost'))
+            flags.append(flag('error', 'Closed lost without a lost reason.', 'Close lost or disqualify'))
 
     elif pipeline == REN_PIPELINE:
         won, lost = stage in REN_WON, stage in REN_LOST
         if not p.get('renewal_type'):
-            flags.append(flag('error', '"Renewal type" is empty.', 'Renewals & upsells'))
+            flags.append(flag('error', '"Renewal type" is empty.', 'Create an upsell, downsell or amendment'))
         if not has_parent_deal:
-            flags.append(flag('error', 'Not linked to the previous deal with the "Parent deal" label.', 'Renewals & upsells'))
+            flags.append(flag('error', 'Not linked to the previous deal with the "Parent deal" label.', 'Create an upsell, downsell or amendment'))
         if 'new deal' in name.lower():
-            flags.append(flag('warning', 'Named "New Deal" but in Renewals & upsells: check it is really a renewal/upsell and not new business.', 'Renewals & upsells'))
+            flags.append(flag('warning', 'Named "New Deal" but in Renewals & upsells: check it is really a renewal/upsell and not new business.', 'Create an upsell, downsell or amendment'))
         if won:
             flags += check_won_common(p, line_items)
         if lost and not (p.get('closed_lost_reason') or p.get('closed_lost_reason___category')):
-            flags.append(flag('error', 'Closed lost / churned without a lost reason.', 'Closed lost'))
+            flags.append(flag('error', 'Closed lost / churned without a lost reason.', 'Close lost or disqualify'))
 
     return flags
 
@@ -326,25 +327,25 @@ def check_won_common(p, line_items):
     flags = []
     dms = (p.get('dms_ims_multiple_checkboxes') or '').split(';')
     if 'Other' in dms:
-        flags.append(flag('warning', 'DMS set to "Other": be specific, the CSM needs it for the integration.', 'Handover to CSM'))
+        flags.append(flag('warning', 'DMS set to "Other": be specific, the CSM needs it for the integration.', 'Close a deal as won'))
     if not p.get('revoke_auto_renew'):
-        flags.append(flag('warning', '"Revoke auto-renew?" is empty: it defines the renewal rules.', 'Handover to CSM'))
+        flags.append(flag('warning', '"Revoke auto-renew?" is empty: it defines the renewal rules.', 'Close a deal as won'))
     if not p.get('hs_pinned_engagement_id'):
-        flags.append(flag('warning', 'No pinned handover note for the CSM.', 'Handover to CSM'))
+        flags.append(flag('warning', 'No pinned handover note for the CSM.', 'Close a deal as won'))
 
     if not line_items:
-        flags.append(flag('error', 'Closed won without line items: ARR cannot be calculated.', 'Quotes, line items & ARR'))
+        flags.append(flag('error', 'Closed won without line items: ARR cannot be calculated.', 'Build the quote and line items'))
     else:
         is_api = 'API' in (p.get('cars__product') or '').split(';')
         one_time = [li for li in line_items
                     if not li.get('recurringbillingfrequency') and 'setup' not in (li.get('name') or '').lower().replace('-', '').replace(' ', '')]
         if one_time and (is_api or len(one_time) == len(line_items)):
             names = ', '.join((li.get('name') or '?') for li in one_time[:3])
-            flags.append(flag('error', f'Line item billed "One-time" ({names}): not counted as recurring revenue, so not in your signings or bonus.', 'Quotes, line items & ARR'))
+            flags.append(flag('error', f'Line item billed "One-time" ({names}): not counted as recurring revenue, so not in your signings or bonus.', 'Build the quote and line items'))
         if any(li.get('recurringbillingfrequency') and not li.get('hs_recurring_billing_period') for li in line_items):
-            flags.append(flag('warning', 'A recurring line item has no Term set.', 'Quotes, line items & ARR'))
+            flags.append(flag('warning', 'A recurring line item has no Term set.', 'Build the quote and line items'))
     if not to_int(p.get('amount')):
-        flags.append(flag('error', 'Deal amount is empty or 0.', 'Quotes, line items & ARR'))
+        flags.append(flag('error', 'Deal amount is empty or 0.', 'Build the quote and line items'))
     return flags
 
 
@@ -353,7 +354,7 @@ def check_won_common(p, line_items):
 @app.route('/api/guide')
 @api_login_required
 def guide():
-    return jsonify({'markdown': GUIDE_MD, 'qa_enabled': bool(os.environ.get('ANTHROPIC_API_KEY'))})
+    return jsonify({'howto': HOWTO_MD, 'markdown': GUIDE_MD, 'qa_enabled': bool(os.environ.get('ANTHROPIC_API_KEY'))})
 
 
 @app.route('/api/owners')
@@ -451,6 +452,8 @@ Answer ONLY from the guide below. If the guide does not cover the question, say 
 Style: short and practical, like a helpful colleague. Give the exact steps or field values when the guide has them. Use bullet points for steps. Reply in the language of the question. End with the name of the guide section you used, formatted as: Source: <section name>.
 
 <guide>
+{HOWTO_MD}
+
 {GUIDE_MD}
 </guide>"""
 

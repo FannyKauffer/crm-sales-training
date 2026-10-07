@@ -20,6 +20,9 @@
     .prose hr { margin: 2rem 0; border-color: #e5e7eb; }
     .prose h2.flash { background: #fef3c7; transition: background .3s; }
     .chat .prose p, .chat .prose li { font-size: .875rem; }
+    .howto ol > li { margin: .35rem 0; padding-left: .25rem; }
+    .howto ol > li::marker { color: #4f46e5; font-weight: 700; }
+    .howto p strong:first-child { color: #111827; }
   </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -45,14 +48,48 @@
   <main class="max-w-6xl mx-auto px-4 py-6">
     <!-- GUIDE -->
     <section id="tab-guide" class="hidden">
-      <div class="flex gap-6">
-        <aside class="hidden lg:block w-60 shrink-0">
-          <div class="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto text-sm" id="toc"></div>
-        </aside>
-        <div class="flex-1 min-w-0">
-          <input id="guide-search" type="search" placeholder="Filter the guide (e.g. inbound, DMS, upsell)…"
-            class="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm mb-4 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"/>
-          <article id="guide" class="prose bg-white rounded-2xl border border-gray-100 p-6">Loading…</article>
+      <!-- How-to home: one card per action -->
+      <div id="howto-home">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">What do you want to do in HubSpot?</h2>
+          <p class="text-sm text-gray-500 mt-1">Pick a task to see the steps, the fields to fill and the mistakes to avoid.</p>
+          <input id="howto-search" type="search" placeholder="Search a task (e.g. upsell, location, inbound)…"
+            class="w-full max-w-lg mt-4 border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"/>
+        </div>
+        <div id="howto-cards" class="space-y-8">Loading…</div>
+        <p id="howto-empty" class="hidden text-center text-sm text-gray-500 py-8">No task matches. Try the <a href="#reference" class="text-indigo-600 hover:underline">full reference</a>.</p>
+        <p class="text-center text-sm text-gray-500 mt-10">Looking for every rule in detail? <a href="#reference" class="text-indigo-600 hover:underline font-medium">Open the full reference →</a></p>
+      </div>
+
+      <!-- One how-to -->
+      <div id="howto-detail" class="hidden max-w-3xl mx-auto">
+        <a href="#" class="text-sm text-indigo-600 hover:underline">← All tasks</a>
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 mt-3">
+          <div class="flex items-start gap-3">
+            <div id="hd-emoji" class="text-3xl leading-none"></div>
+            <div>
+              <h2 id="hd-title" class="text-xl font-bold text-gray-800"></h2>
+              <p id="hd-summary" class="text-sm text-gray-500 mt-1"></p>
+            </div>
+          </div>
+          <div id="hd-video" class="hidden mt-5 rounded-xl overflow-hidden border border-gray-100" style="aspect-ratio: 16/9"></div>
+          <article id="hd-body" class="prose howto mt-4"></article>
+        </div>
+        <div id="hd-nav" class="flex justify-between gap-3 mt-4 text-sm"></div>
+      </div>
+
+      <!-- Full reference (previous guide) -->
+      <div id="reference" class="hidden">
+        <a href="#" class="text-sm text-indigo-600 hover:underline">← All tasks</a>
+        <div class="flex gap-6 mt-3">
+          <aside class="hidden lg:block w-60 shrink-0">
+            <div class="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto text-sm" id="toc"></div>
+          </aside>
+          <div class="flex-1 min-w-0">
+            <input id="guide-search" type="search" placeholder="Filter the reference (e.g. inbound, DMS, upsell)…"
+              class="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm mb-4 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"/>
+            <article id="guide" class="prose bg-white rounded-2xl border border-gray-100 p-6">Loading…</article>
+          </div>
         </div>
       </div>
     </section>
@@ -123,33 +160,127 @@ function showTab(name) {
 }
 document.querySelectorAll('.tab').forEach(b => b.onclick = () => showTab(b.dataset.tab));
 
-// ── Guide ──
+// ── Guide: how-to cards ──
+// howto.md format: "# Category", "## <emoji> Title", "> summary", optional "@video <loom url>", then the steps.
+let howtos = [];
+function parseHowto(md) {
+  const out = []; let cat = '', cur = null;
+  for (const line of md.split('\n')) {
+    if (line.startsWith('# ')) { cat = line.slice(2).trim(); continue; }
+    if (line.startsWith('## ')) {
+      const m = line.slice(3).trim().match(/^(\p{Extended_Pictographic}️?)\s*(.*)$/u);
+      cur = { cat, emoji: m ? m[1] : '📄', title: m ? m[2] : line.slice(3).trim(), summary: '', video: '', body: [] };
+      cur.slug = slug(cur.title);
+      out.push(cur); continue;
+    }
+    if (!cur) continue;
+    if (!cur.summary && line.startsWith('> ')) { cur.summary = line.slice(2).trim(); continue; }
+    if (line.startsWith('@video ')) { cur.video = line.slice(7).trim(); continue; }
+    cur.body.push(line);
+  }
+  out.forEach(h => { h.body = h.body.join('\n').trim(); h.text = (h.title + ' ' + h.summary + ' ' + h.body).toLowerCase(); });
+  return out;
+}
+
+function renderCards(q = '') {
+  q = q.trim().toLowerCase();
+  const list = howtos.filter(h => !q || h.text.includes(q));
+  const cats = [...new Set(list.map(h => h.cat))];
+  $('#howto-cards').innerHTML = cats.map(cat => `
+    <div>
+      <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">${esc(cat)}</h3>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        ${list.filter(h => h.cat === cat).map(h => `
+          <a href="#howto/${h.slug}" class="group bg-white rounded-xl border border-gray-100 p-4 hover:border-indigo-200 hover:shadow-sm transition flex gap-3">
+            <div class="text-2xl leading-none">${h.emoji}</div>
+            <div class="min-w-0">
+              <div class="font-semibold text-gray-800 group-hover:text-indigo-600">${esc(h.title)}</div>
+              <div class="text-xs text-gray-500 mt-1">${esc(h.summary)}</div>
+              ${h.video ? '<div class="text-[11px] text-indigo-500 mt-2">▶ Video included</div>' : ''}
+            </div>
+          </a>`).join('')}
+      </div>
+    </div>`).join('');
+  $('#howto-empty').classList.toggle('hidden', list.length > 0);
+}
+$('#howto-search').oninput = e => renderCards(e.target.value);
+
+function loomEmbed(url) {
+  const m = url.match(/loom\.com\/share\/([a-f0-9]+)/);
+  return m ? `https://www.loom.com/embed/${m[1]}` : null;
+}
+
+function showGuideView(view) {
+  ['howto-home', 'howto-detail', 'reference'].forEach(id => $('#' + id).classList.toggle('hidden', id !== view));
+}
+
+function showHowto(s) {
+  const i = howtos.findIndex(h => h.slug === s);
+  if (i < 0) return showGuideView('howto-home');
+  const h = howtos[i];
+  $('#hd-emoji').textContent = h.emoji;
+  $('#hd-title').textContent = h.title;
+  $('#hd-summary').textContent = h.summary;
+  $('#hd-body').innerHTML = marked.parse(h.body);
+  const embed = h.video && loomEmbed(h.video);
+  $('#hd-video').classList.toggle('hidden', !embed);
+  $('#hd-video').innerHTML = embed ? `<iframe src="${embed}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>` : '';
+  const prev = howtos[i - 1], next = howtos[i + 1];
+  $('#hd-nav').innerHTML =
+    (prev ? `<a href="#howto/${prev.slug}" class="text-gray-500 hover:text-indigo-600">← ${esc(prev.title)}</a>` : '<span></span>') +
+    (next ? `<a href="#howto/${next.slug}" class="text-gray-500 hover:text-indigo-600 text-right">${esc(next.title)} →</a>` : '');
+  showGuideView('howto-detail');
+  window.scrollTo(0, 0);
+}
+
+// Hash routes: #howto/<slug>, #reference[/<section>], anything else = home
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h.startsWith('howto/') || h.startsWith('reference')) showTab('guide');
+  if (h.startsWith('howto/')) return showHowto(h.slice(6));
+  if (h.startsWith('reference')) {
+    showGuideView('reference');
+    const id = h.split('/')[1];
+    const target = id && document.getElementById(id);
+    if (target) {
+      $('#guide-search').value = ''; filterGuide('');
+      target.scrollIntoView({ behavior: 'smooth' });
+      target.classList.add('flash'); setTimeout(() => target.classList.remove('flash'), 1500);
+    } else window.scrollTo(0, 0);
+    return;
+  }
+  showGuideView('howto-home');
+}
+window.addEventListener('hashchange', route);
+
+// ── Guide: full reference ──
 let guideLoaded = false;
 async function loadGuide() {
-  const { markdown, qa_enabled } = await api('/api/guide');
+  const { howto, markdown, qa_enabled } = await api('/api/guide');
   // Q&A tab only shows once ANTHROPIC_API_KEY is configured on the server
   if (!qa_enabled) {
     document.querySelector('.tab[data-tab="ask"]').remove();
     if (!$('#tab-ask').classList.contains('hidden')) showTab('guide');
   }
+  howtos = parseHowto(howto);
+  renderCards();
+
   const el = $('#guide');
   el.innerHTML = marked.parse(markdown);
   const toc = [];
   el.querySelectorAll('h1, h2').forEach(h => {
     h.id = slug(h.textContent);
-    toc.push(`<a href="#${h.id}" class="block ${h.tagName === 'H1' ? 'font-semibold text-gray-800 mt-3' : 'pl-3 text-gray-500 hover:text-indigo-600'} py-0.5">${esc(h.textContent)}</a>`);
+    toc.push(`<a href="#reference/${h.id}" class="block ${h.tagName === 'H1' ? 'font-semibold text-gray-800 mt-3' : 'pl-3 text-gray-500 hover:text-indigo-600'} py-0.5">${esc(h.textContent)}</a>`);
   });
   $('#toc').innerHTML = toc.join('');
   guideLoaded = true;
+  route();
 }
 
+// Called from "My deals": open the matching how-to, or the reference section
 function goToSection(id) {
-  showTab('guide');
-  $('#guide-search').value = ''; filterGuide('');
-  const h = document.getElementById(id);
-  if (!h) return;
-  h.scrollIntoView({ behavior: 'smooth' });
-  h.classList.add('flash'); setTimeout(() => h.classList.remove('flash'), 1500);
+  const target = howtos.some(h => h.slug === id) ? 'howto/' + id : 'reference/' + id;
+  if (location.hash.slice(1) === target) route(); else location.hash = target;
 }
 
 // Filter: keep only h2 sections whose text matches
@@ -256,7 +387,7 @@ function renderDeals() {
     const flags = d.flags.length ? d.flags.map(f => `
       <li class="flex gap-2 items-start">
         <span class="shrink-0 mt-0.5 text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded ${f.severity === 'error' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-700'}">${f.severity}</span>
-        <span class="flex-1">${esc(f.message)} <button class="text-indigo-600 hover:underline whitespace-nowrap" onclick="goToSection('${f.section}')">See the rule →</button></span>
+        <span class="flex-1">${esc(f.message)} <button class="text-indigo-600 hover:underline whitespace-nowrap" onclick="goToSection('${f.section}')">How to fix it →</button></span>
       </li>`).join('') : '<li class="text-emerald-600">✓ Follows the guidelines</li>';
     return `<div class="bg-white rounded-xl border ${d.flags.some(f => f.severity === 'error') ? 'border-red-100' : 'border-gray-100'} p-4">
       <div class="flex flex-wrap justify-between gap-2 mb-2">

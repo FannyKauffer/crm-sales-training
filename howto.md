@@ -1,0 +1,247 @@
+# Understand
+
+## 🧭 Understand the sales pipeline
+
+> From first contact to live client: which object and which pipeline to use at each step.
+
+**1. Prospecting happens on the LEAD** (pipeline *New leads*)
+
+New / attempting → Contacted → Engaged → Meeting scheduled → **Qualified** ⭐ (creates the deal) — or Disqualified / Not pursuing.
+
+**2. Selling happens on the DEAL.** Pick the pipeline with one question: *does this replace an existing contract?*
+
+| | **CarCutter - New business** | **CarCutter - Renewals & upsells** |
+|---|---|---|
+| Use it for | New client, new location with its own contract, new showroom | Anything that **cancels and replaces** an existing contract: renewal, upsell, downsell, amendment |
+| Stages | Qualification call → Demo → Testing → Negotiation / Trade → **Closed won** / Closed lost | Deal created → Client informed → Discussion scheduled → Negotiation / Trade → Contract sent → **Closed won** / Churned |
+
+**3. After Closed won, automation takes over:** Onboarding → Contract is live → Contract has expired. You don't move these stages yourself.
+
+**What each New business stage means**
+
+- **Qualification call** — confirm ICP fit, use case, number of locations, DMS, decision maker, buying process. Not a fit → *Rejected by AE*.
+- **Demo** — log the demo meeting on the deal, contact and company.
+- **Testing** — run the agreed test.
+- **Negotiation / Trade** — quote + line items, contract duration, billing email.
+- **Closed won** — contract signed. See *Close a deal as won*.
+
+⚠️ Fill the mandatory fields **when you move the deal**, not at the end. HubSpot blocks the stage change if they are missing.
+
+## 👥 Who does what
+
+> BDR, AE, SMB, CSM: who owns which accounts and which data.
+
+| Role | Scope | Owns in HubSpot |
+|---|---|---|
+| **BDR** | Prospects large strategic accounts for AEs. Job done when the AE completes a qualified demo | Company & contact info (BDR info), parent/child structure |
+| **AE** | Converts strategic accounts (> 3 locations) | Deal data, quotes, Top 100 accounts clean |
+| **SMB** | Full cycle for accounts **≤ 3 locations** (prospecting → closing). Bigger accounts go to an AE | Leads, deals, companies of their accounts |
+| **CSM** | Retains and renews strategic accounts | Data quality after signature, renewals |
+| **Sales Ops** | Imports and data monitoring | Slack **#cc-import-requests** |
+
+# Create
+
+## 🏢 Create a company
+
+> Add a new dealership or group to HubSpot without creating a duplicate.
+
+1. **Search HubSpot first** (name *and* website). If it exists, don't create a duplicate.
+2. Companies → **Create company**.
+3. **Domain / website**: always fill it. HubSpot matches companies by domain.
+4. **Name** it with the convention:
+   - Group HQ: `Group name - HQ` (e.g. *AutoNation - HQ*)
+   - Location: business name (e.g. *AutoNation Miami*)
+5. Part of a group? In **Associate company with**, search the HQ and set the label **Parent Company** directly in the form.
+6. Fill the key fields: **Client type**, **Total number of dealerships in group** (1 if single store, filled on the HQ), **DMS / IMS**, **Affiliated brands** (official franchises only), **Country**.
+
+⚠️ Many companies to add (a whole group)? Don't create them one by one or import yourself: see *Add the locations of a group*.
+
+## 🏬 Add the locations of a group
+
+> Create the child companies of a dealer group and link them to the HQ.
+
+**Up to 10 locations** — create them yourself:
+1. Open the **HQ company** → Companies section → **+ Add**.
+2. Create each location (business name + website) with the label **Child Company**.
+
+**More than 10 locations** — ask for an import:
+1. Copy the **BDR import template** (child companies) from the Notion knowledge base, Module 1.
+2. Fill it in: name, domain, address, country of each location.
+3. Post it in Slack **#cc-import-requests** with the HQ name, HQ address, expected number of locations and website. Sales Ops runs the import.
+
+⚠️ Never run an import in HubSpot yourself, and always **make a copy** of the template.
+
+✅ Check: the number of child companies should match **Total number of dealerships in group** on the HQ.
+
+## 🎯 Create a lead or handle an inbound
+
+> Start prospecting the right way so your activity and conversions are tracked.
+
+**New outbound lead**
+1. Top right **Create → Lead**, linked to the contact (or company).
+2. Pipeline **New leads**, stage **New/Attempting**, lead type **New business**, vertical **Carcutter**, owner = you.
+3. Make sure a **contact** is attached (needed for sequences).
+
+**Inbound lead** (arrives automatically as `Inbound / [name]`)
+1. Call within minutes. SMB SLA: qualified or disqualified **within 6 hours**.
+2. Move the lead through the stages, or straight to **Qualified** if you qualify it on the first call.
+3. At **Qualified**, HubSpot opens the deal creation form.
+
+⚠️ **Never create a deal directly from an inbound**: always go through the lead, otherwise inbound conversion is lost.
+
+## 💼 Create a deal
+
+> The fields to fill so the deal is right from day one.
+
+@video https://www.loom.com/share/2e434bd4fb7c4f5ba589b75abb4bb9ff
+
+1. From a **Qualified lead** (recommended), or **Sales → Deals → Create deal**.
+2. Pipeline **CarCutter - New business**, stage **Qualification call**.
+3. Fill in:
+
+| Field | What to enter |
+|---|---|
+| Deal name | Company name |
+| HQ name | If part of a group |
+| Total number of dealerships in group | Whole group, **1** if single location |
+| Number of dealerships involved in this deal | Locations covered by **this** contract, **1** if single. Never more than the group |
+| [Cars] Products | App, API, 360… |
+| DMS | The dealership's DMS |
+| Affiliated brands | Official franchises only |
+| [CC] Company legal name | Legal name printed on the invoice |
+
+4. Associate the **company** and the **contact**.
+   - Contract signed by the HQ for several locations? Associate the **HQ company and every location covered**.
+
+⚠️ Existing client buying more? That's not a new deal: see *Create an upsell*.
+
+## 📅 Book a demo and mark it completed
+
+> How the demo is logged decides whether the BDR gets credit for it.
+
+**BDR — book it** from the lead:
+1. **Schedule a meeting**: Host = **User**, Type = **Demo**, add the AE as attendee.
+2. **Team note**: "Booked by {BDR} for {AE}".
+3. Associate **Lead + Deal + Contact + Company**.
+
+Prospect booked through the AE's link? **Log a meeting** on the lead (Outcome *Scheduled*, Type *Demo*, AE as attendee, attribution note).
+
+**AE — after the demo**: set the outcome to **Completed** (contact page → meeting → Actions → Edit, or Sales Workspace → Meetings → Log outcome). Only completed demos count for the BDR.
+
+⚠️ Never write internal notes in *Meeting description*: the prospect sees it. Use **Team notes**.
+
+## 🧾 Build the quote and line items
+
+> Line items drive the deal amount, the ARR, your signings and your bonus.
+
+1. In the deal → **Create quote** → **Add line item → Select from product library**.
+2. Pick the right **folder**, **language** and **tier** (use the pricing grid EU or Americas).
+3. On each line item:
+   - Discount → **Unit discount** (never edit the unit price)
+   - **Term** = contract duration in months
+   - **Billing frequency** = Annually / Semi-annually / Quarterly / Monthly
+   - API deals: **Commitment type = Credit Pack**
+4. HQ pays for all locations → **one quote** on the parent. Each location pays → **one deal and one quote per location**.
+
+🚨 **Never "One-time" billing** on a subscription (especially API): it doesn't count as recurring revenue, so the deal won't appear in your signings or bonus. Only set-up fees are one-time.
+
+# Close
+
+## 🏆 Close a deal as won
+
+> The checklist before Closed won, so the CSM can start onboarding.
+
+1. **Line items** are on the deal (no line items = no ARR, no subscription).
+2. Fill these fields (no blanks, no defaults):
+   - **Number of dealerships in group** (company) and **Number of dealerships involved in this deal** (deal)
+   - **is multi-location deal?**
+   - **DMS** (avoid "Other")
+   - **Affiliated brands**
+   - **Revoke auto-renew?** (Yes only if the client wants to renew manually)
+3. Add a **pinned note** for the CSM:
+   - Operational contact (name, role, email, phone)
+   - Single or multi-location, specifics per site
+   - Features to activate or not (Next gen 360, Stock images, Shotlist, Hotspots…)
+   - Standing inventory interest (one-time fee)
+   - Anything else the CSM should know
+4. Contract signed **outside HubSpot** (paper, email)? Deal → View all properties → **Customer procurement process = Yes**, otherwise onboarding never starts.
+
+## ❌ Close lost or disqualify
+
+> Close cleanly so we know why, and can come back later.
+
+**Deal lost** → stage **Closed lost** + **Closed lost reason** and its category.
+
+**Lead not converting** — choose carefully:
+- **Disqualified** = never a fit: Not a good fit, Outside automotive, Duplicate, Scam, Low volume, Not the right contact.
+- **Not pursuing** = good lead, wrong moment: Not the right timing, No budget, With a competitor, Not interested right now, Ghosting.
+
+Always add a **note** with context (e.g. "Less than 100 cars on lot").
+
+# Existing clients
+
+## 📈 Create an upsell, downsell or amendment
+
+> The new deal replaces the old contract: it must contain the full contract.
+
+@video https://www.loom.com/share/766ec4c162c844509a73288d56a1870d
+
+1. Create the deal in **CarCutter - Renewals & upsells** (never New business).
+2. Set **Renewal type**: Renewal - upsell / Renewal - downsell / Contract amendment…
+3. Quote with **all line items of the new contract** (existing products + new ones), not only what's added.
+4. Link the deals: open the **original deal** → Deals section → add the new deal → **More → Edit association labels → Parent deal**. The original is the parent, the new deal the child.
+5. Associate the **company** (and contact).
+6. New product needing setup? Create a ticket: pipeline **CarCutter Onboarding**, name `{Deal name - feature}`, owner = the CSM, status **New**, associated to company and contact.
+
+When the upsell is won, HubSpot automatically stops the old contract (auto-renew revoked, old deal → Contract has expired). Without the Parent deal link, **the client can be billed twice**.
+
+## 📍 Add a location to a contract
+
+> Two cases depending on who pays for the new location.
+
+**First: create the location** as a child company of the HQ (see *Add the locations of a group*).
+
+**Case A — the new location gets its own contract** (it pays separately, nothing is replaced)
+1. New deal in **CarCutter - New business** on the **new location's company**.
+2. Number of dealerships involved in this deal = **1**.
+3. Normal flow: quote, Closed won, handover.
+
+**Case B — the location joins the existing contract** (the HQ pays for everyone)
+1. It replaces the current contract → follow *Create an upsell* (Renewals & upsells, renewal type **Renewal - upsell**, **Parent deal** link).
+2. The quote covers **all locations**, including the new one.
+3. Update **Number of dealerships involved in this deal** to the new total and set **is multi-location deal? = Yes**.
+4. Associate the deal with the HQ **and every location** covered, including the new one.
+
+## 🔎 Check if a company is already a client
+
+> Avoid prospecting a client as if it were a new lead.
+
+Look at two properties on the company:
+
+| Property | Means |
+|---|---|
+| **Group status** | At least one dealership of the group is a client |
+| **Company status** | This company itself is a client |
+
+- Group *Active* but company *Inactive* → the group is a client, this location isn't. Talk to the CSM before prospecting.
+- A CSM on the company is another sign it's a client.
+- Client buying more → *Create an upsell*, not a New business deal.
+
+# Daily work
+
+## 📞 Log calls, emails and notes
+
+> Activity logged in the wrong place is invisible, and you look inactive.
+
+- Log from the **lead page** (best) or the **contact page**.
+- ❌ Never from the **company page**: it won't show on the lead or in dashboards.
+- Logged on the company by mistake? Open the activity → **Associations** → add the lead.
+- Tag every call in **Modjo** and remove other recording bots.
+
+## ✉️ Enroll leads in a sequence
+
+> Put prospects into an automated outreach cadence.
+
+1. Each lead needs an **associated contact**. Error *"select one or more partner accounts with a primary contact"* = no contact on the lead → add one from the lead record.
+2. Lead view → filter → select the leads → **Enroll in sequence**.
+3. Max **50 leads** per batch.
