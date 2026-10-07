@@ -178,6 +178,8 @@ Contact: **Job title in English** and **Buying role** (several if needed).
 | Flat annual fee | **Flat rate annually**: avoid it | | |
 
 4. HQ pays for all locations → **one quote** on the parent. Each location pays → **one deal and one quote per location**.
+5. **New business: always add a showroom** line item (Standard, Custom or Tailor-made Showroom).
+6. **Set-up fees only deal** (no subscription)? Set **Set-up fees only (no recurring) = Yes** on the deal and use **only** showroom, integration (IMS/DMS, FTP/SFTP, Cloud server) or *Standing inventory processing fee* line items. No subscription, flat fee or API.
 
 💡 **Minimum commitment set to Annually** shows the full commitment on the quote, even though Finance bills monthly on consumption. Add a comment to the buyer to clarify that billing is monthly.
 
@@ -191,6 +193,7 @@ Contact: **Job title in English** and **Buying role** (several if needed).
 
 1. **Line items** are on the deal (no line items = no ARR, no subscription).
 2. Fill these fields (no blanks, no defaults):
+   - **Contract duration (in months)**: subscription end date and renewals are calculated from it
    - **Number of dealerships in group** (company) and **Number of dealerships involved in this deal** (deal)
    - **is multi-location deal?**
    - **DMS** (avoid "Other")

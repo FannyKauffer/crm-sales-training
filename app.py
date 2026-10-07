@@ -68,11 +68,16 @@ EXPIRED_STAGES = {'5108653252', '5600993473'}                    # Contract has 
 # Detected by the association label text (read from the new deal, the old one is its parent).
 PARENT_LABEL_WORD = 'parent'
 
+# Line items allowed on a "Set-up fees only" deal: showroom, integration, standing inventory processing
+SETUP_ONLY_KEYWORDS = ('showroom', 'integration', 'intégration', 'inventory processing')
+NB_CLOSED_WON, NB_ONBOARDING = '141401056', '142518229'
+
 DEAL_PROPS = [
     'dealname', 'pipeline', 'dealstage', 'hubspot_owner_id', 'createdate', 'closedate', 'amount',
     'deal_currency_code', 'number_of_dealerships', 'number_of_locations_concerned_by_this_deal',
     'oem_brand', 'cars__product', 'company_legal_name', 'dms_ims_multiple_checkboxes',
     'renewal_type', 'num_associated_contacts', 'hs_num_of_associated_line_items',
+    'contractdurationinmonths', 'setup_fees_only_no_recurring',
     'closed_lost_reason', 'closed_lost_reason___category',
 ]
 
@@ -306,6 +311,8 @@ CHECKS = [
      'title': 'No company associated to the deal', 'why': 'Every deal must be linked to its company (and to every location it covers).'},
     {'id': 'nb_no_contact', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No contact associated to the deal', 'why': 'Every deal must be linked to a contact.'},
+    {'id': 'nb_no_showroom', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Build the quote and line items',
+     'title': 'No showroom line item (Closed won / Onboarding)', 'why': 'Every new business contract needs a showroom line item so onboarding can set it up.'},
     {'id': 'nb_won_dms', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Close a deal as won',
      'title': 'DMS is empty', 'why': 'The CSM needs the DMS for the technical integration.'},
     # Renewals & upsells — signed deals
@@ -324,6 +331,10 @@ CHECKS = [
      'title': 'Line item billed "One-time" (set-up fees excluded)', 'why': 'Flagged on API deals, or when every line item is one-time. Not counted as recurring revenue, so not in signings or bonus.'},
     {'id': 'won_no_term', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Build the quote and line items',
      'title': 'Recurring line item without a Term', 'why': 'Term = contract duration in months.'},
+    {'id': 'won_duration', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Close a deal as won',
+     'title': '"Contract duration (in months)" is empty', 'why': 'Subscription end date and renewal workflows are calculated from it.'},
+    {'id': 'won_setup_only_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
+     'title': '"Set-up fees only" deal with other line items', 'why': 'A set-up fees only deal may only contain showroom, integration or inventory processing fees, no subscription, flat fee or API.'},
     {'id': 'won_amount', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'Deal amount is empty or 0', 'why': 'The amount comes from the recurring line items.'},
     # Open deals
@@ -376,6 +387,9 @@ def check_deal(p, companies, line_items, has_parent_deal):
                 flags.append(flag('nb_no_contact'))
             if not (p.get('dms_ims_multiple_checkboxes') or ''):
                 flags.append(flag('nb_won_dms'))
+            if stage in (NB_CLOSED_WON, NB_ONBOARDING) and line_items is not None \
+                    and not any('showroom' in (li.get('name') or '').lower() for li in line_items):
+                flags.append(flag('nb_no_showroom'))
             flags += check_won_common(p, line_items)
 
         # Open NB deal on a company that is already an active client → probably an upsell
@@ -405,6 +419,16 @@ def check_deal(p, companies, line_items, has_parent_deal):
 
 def check_won_common(p, line_items):
     flags = []
+    setup_only = (p.get('setup_fees_only_no_recurring') or '').lower() == 'true'
+    if to_int(p.get('contractdurationinmonths')) is None:
+        flags.append(flag('won_duration'))
+    if setup_only and line_items:
+        wrong = [li.get('name') or '?' for li in line_items
+                 if li.get('recurringbillingfrequency')
+                 or not any(k in (li.get('name') or '').lower() for k in SETUP_ONLY_KEYWORDS)]
+        if wrong:
+            flags.append(flag('won_setup_only_items',
+                              f'"Set-up fees only" deal with other line items: {", ".join(wrong[:3])}'))
     dms = (p.get('dms_ims_multiple_checkboxes') or '').split(';')
     if 'Other' in dms:
         flags.append(flag('won_dms_other'))
@@ -413,7 +437,7 @@ def check_won_common(p, line_items):
     count = to_int(p.get('hs_num_of_associated_line_items'))
     if count == 0 or (count is None and line_items == []):
         flags.append(flag('won_no_line_items'))
-    if line_items:
+    if line_items and not setup_only:
         is_api = 'API' in (p.get('cars__product') or '').split(';')
         one_time = [li for li in line_items
                     if not li.get('recurringbillingfrequency') and 'setup' not in (li.get('name') or '').lower().replace('-', '').replace(' ', '')]
@@ -422,7 +446,7 @@ def check_won_common(p, line_items):
             flags.append(flag('won_one_time', f'Line item billed "One-time" ({names}): not counted as recurring revenue, so not in your signings or bonus'))
         if any(li.get('recurringbillingfrequency') and not li.get('hs_recurring_billing_period') for li in line_items):
             flags.append(flag('won_no_term'))
-    if not to_int(p.get('amount')):
+    if not setup_only and not to_int(p.get('amount')):
         flags.append(flag('won_amount'))
     return flags
 
