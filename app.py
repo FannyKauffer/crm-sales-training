@@ -31,7 +31,12 @@ CLAUDE_MODEL = os.environ.get('CLAUDE_MODEL', 'claude-opus-5')
 HOWTO_MD = (Path(__file__).parent / 'howto.md').read_text(encoding='utf-8')        # action-oriented cards
 GUIDE_MD = (Path(__file__).parent / 'guidelines.md').read_text(encoding='utf-8')     # full reference
 
-# Owners are listed in the "Mes deals" picker when one of their HubSpot teams matches
+# The tool targets US Account Executives. "My deals" lists exactly these people
+# (emails or full names as in HubSpot, comma-separated). Override with the SALES_REPS env var.
+DEFAULT_SALES_REPS = ''
+SALES_REPS = {r.strip().lower() for r in os.environ.get('SALES_REPS', DEFAULT_SALES_REPS).split(',') if r.strip()}
+
+# Fallback when SALES_REPS is empty: owners whose HubSpot team matches one of these words
 SALES_TEAM_KEYWORDS = [k.strip().lower() for k in
                        os.environ.get('SALES_TEAM_KEYWORDS', 'sales,ae,bdr,smb').split(',') if k.strip()]
 
@@ -373,9 +378,12 @@ def owners():
         data = resp.json()
         for o in data.get('results', []):
             teams = [t.get('name', '') for t in o.get('teams', []) or []]
-            if not any(kw in re.split(r'[^a-z]+', t.lower()) for t in teams for kw in SALES_TEAM_KEYWORDS):
-                continue
             name = f"{o.get('firstName', '')} {o.get('lastName', '')}".strip() or o.get('email', '')
+            if SALES_REPS:
+                if (o.get('email') or '').lower() not in SALES_REPS and name.lower() not in SALES_REPS:
+                    continue
+            elif not any(kw in re.split(r'[^a-z]+', t.lower()) for t in teams for kw in SALES_TEAM_KEYWORDS):
+                continue
             out.append({'id': o['id'], 'name': name, 'email': (o.get('email') or '').lower(), 'teams': teams})
         after = data.get('paging', {}).get('next', {}).get('after')
         if not after:
@@ -445,7 +453,9 @@ def my_deals():
     })
 
 
-QA_SYSTEM = f"""You are the CRM coach of CarCutter's sales team (BDRs, AEs, SMB reps). You answer questions about how to use HubSpot at CarCutter.
+QA_SYSTEM = f"""You are the CRM coach of CarCutter's US Account Executives. You answer questions about how to use HubSpot at CarCutter.
+
+Your users are AEs in the US. They have no BDR: they prospect, qualify, demo and close themselves, so BDR tasks (lead handling, qualification info, logging demos) are theirs too. Frame answers for them; skip rules that only concern BDR attribution or the EU team.
 
 Answer ONLY from the guide below. If the guide does not cover the question, say so plainly and suggest asking Sales Ops (Romane) or the #cc-import-requests Slack channel for import requests. Never invent a process, property name or rule.
 

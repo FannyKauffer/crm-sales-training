@@ -21,7 +21,7 @@ New / attempting → Contacted → Engaged → Meeting scheduled → **Qualified
 
 **What each New business stage means**
 
-- **Qualification call** — confirm ICP fit, use case, number of locations, DMS, decision maker, buying process. Not a fit → *Rejected by AE*.
+- **Qualification call** — confirm ICP fit, use case, number of locations, DMS, decision maker, buying process. Not a fit → *Closed lost* with the reason.
 - **Demo** — log the demo meeting on the deal, contact and company.
 - **Testing** — run the agreed test.
 - **Negotiation / Trade** — quote + line items, contract duration, billing email.
@@ -29,17 +29,17 @@ New / attempting → Contacted → Engaged → Meeting scheduled → **Qualified
 
 ⚠️ Fill the mandatory fields **when you move the deal**, not at the end. HubSpot blocks the stage change if they are missing.
 
-## 👥 Who does what
+## 👥 Your role as a US Account Executive
 
-> BDR, AE, SMB, CSM: who owns which accounts and which data.
+> You run the full cycle yourself, from first call to signature. There is no BDR behind you.
 
-| Role | Scope | Owns in HubSpot |
+| Who | Does | Owns in HubSpot |
 |---|---|---|
-| **BDR** | Prospects large strategic accounts for AEs. Job done when the AE completes a qualified demo | Company & contact info (BDR info), parent/child structure |
-| **AE** | Converts strategic accounts (> 3 locations) | Deal data, quotes, Top 100 accounts clean |
-| **SMB** | Full cycle for accounts **≤ 3 locations** (prospecting → closing). Bigger accounts go to an AE | Leads, deals, companies of their accounts |
-| **CSM** | Retains and renews strategic accounts | Data quality after signature, renewals |
+| **You (AE US)** | Prospecting, qualification, demo, negotiation, closing | Leads, companies & contacts (incl. qualification info), parent/child structure, deals, quotes, Top 100 accounts clean |
+| **CSM** | Onboarding after Closed won, retention, renewals | Data quality after signature, renewals |
 | **Sales Ops** | Imports and data monitoring | Slack **#cc-import-requests** |
+
+Because you have no BDR, the company and contact info a BDR would normally fill is **yours to fill**: see *Qualify a prospect*.
 
 # Create
 
@@ -67,7 +67,7 @@ New / attempting → Contacted → Engaged → Meeting scheduled → **Qualified
 2. Create each location (business name + website) with the label **Child Company**.
 
 **More than 10 locations** — ask for an import:
-1. Copy the **BDR import template** (child companies) from the Notion knowledge base, Module 1.
+1. Copy the **child companies import template** from the Notion knowledge base, Module 1.
 2. Fill it in: name, domain, address, country of each location.
 3. Post it in Slack **#cc-import-requests** with the HQ name, HQ address, expected number of locations and website. Sales Ops runs the import.
 
@@ -85,11 +85,39 @@ New / attempting → Contacted → Engaged → Meeting scheduled → **Qualified
 3. Make sure a **contact** is attached (needed for sequences).
 
 **Inbound lead** (arrives automatically as `Inbound / [name]`)
-1. Call within minutes. SMB SLA: qualified or disqualified **within 6 hours**.
+1. Call within minutes: speed is what converts inbounds.
 2. Move the lead through the stages, or straight to **Qualified** if you qualify it on the first call.
 3. At **Qualified**, HubSpot opens the deal creation form.
 
 ⚠️ **Never create a deal directly from an inbound**: always go through the lead, otherwise inbound conversion is lost.
+
+## ✅ Qualify a prospect
+
+> No BDR qualifies for you: these checks and fields are on you, before the demo.
+
+**On the call, confirm the 4 points** — all 4 yes → move forward, otherwise close it early:
+
+| | Ask yourself |
+|---|---|
+| **ICP fit** | Dealer group (our core target) or OEM used-car program? Right size? |
+| **Authority** | Am I talking to a decision maker or strong influencer, not just a user? |
+| **Need** | Is there a clear need around imaging and performance? |
+| **Budget** | Budget allocated? How much, what timeframe? If not, how do they get one? |
+
+**Then fill the qualification info** (the fields a BDR would normally fill) — company:
+
+| Field | Rule |
+|---|---|
+| Client type | Independent dealership / Dealership group HQ / From a group |
+| Imaging solution | Competitor app → select it + competitor name. Unknown → update later |
+| Number of cars on lot | Website estimate, confirm on the call |
+| Total number of dealerships in group | On the HQ, 1 if single store |
+| DMS / IMS | From the list. "Other" only temporarily |
+| Dedicated budget | Confirmed / Process underway / No clear budget. Already paying a competitor = confirmed |
+| Affiliated brands | Official franchises only |
+| Website URL | Copy-paste |
+
+Contact: **Job title in English** and **Buying role** (several if needed).
 
 ## 💼 Create a deal
 
@@ -117,18 +145,16 @@ New / attempting → Contacted → Engaged → Meeting scheduled → **Qualified
 
 ⚠️ Existing client buying more? That's not a new deal: see *Create an upsell*.
 
-## 📅 Book a demo and mark it completed
+## 📅 Book and log a demo
 
-> How the demo is logged decides whether the BDR gets credit for it.
+> Log your demo so it shows on the deal and in the dashboards.
 
-**BDR — book it** from the lead:
-1. **Schedule a meeting**: Host = **User**, Type = **Demo**, add the AE as attendee.
-2. **Team note**: "Booked by {BDR} for {AE}".
+**Book it** from the lead or the deal:
+1. **Schedule a meeting** (or the prospect books through your meeting link: HubSpot logs it automatically).
+2. **Meeting type = Demo**.
 3. Associate **Lead + Deal + Contact + Company**.
 
-Prospect booked through the AE's link? **Log a meeting** on the lead (Outcome *Scheduled*, Type *Demo*, AE as attendee, attribution note).
-
-**AE — after the demo**: set the outcome to **Completed** (contact page → meeting → Actions → Edit, or Sales Workspace → Meetings → Log outcome). Only completed demos count for the BDR.
+**After the demo**: set the outcome to **Completed** (contact page → meeting → Actions → Edit, or Sales Workspace → Meetings → Log outcome).
 
 ⚠️ Never write internal notes in *Meeting description*: the prospect sees it. Use **Team notes**.
 
@@ -137,7 +163,7 @@ Prospect booked through the AE's link? **Log a meeting** on the lead (Outcome *S
 > Line items drive the deal amount, the ARR, your signings and your bonus.
 
 1. In the deal → **Create quote** → **Add line item → Select from product library**.
-2. Pick the right **folder**, **language** and **tier** (use the pricing grid EU or Americas).
+2. Pick the right **folder**, **language** and **tier** (use the **Americas pricing grid**).
 3. On each line item:
    - Discount → **Unit discount** (never edit the unit price)
    - **Term** = contract duration in months
