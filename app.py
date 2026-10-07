@@ -277,56 +277,57 @@ def to_int(v):
 
 # ── Guideline checks ──────────────────────────────────────────────────────────
 # Single registry: the "Checks" tab lists it and check_deal() flags deals with it.
-# scope: where the check applies; severity: error | warning; section: how-to card to fix it.
+# scope: '<deal status> · <pipeline>' where the check applies; severity: error | warning; section: how-to card to fix it.
 
 CHECKS = [
     # New business — signed deals (Closed won and after)
-    {'id': 'nb_total_dealerships', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_total_dealerships', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': '"Total number of dealerships in group" is empty', 'why': 'Needed to measure group coverage. Set 1 if single location.'},
-    {'id': 'nb_deal_dealerships', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_deal_dealerships', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': '"Number of dealerships involved in this deal" is empty', 'why': 'Tells how many locations this contract covers. Set 1 if single location.'},
-    {'id': 'nb_deal_gt_group', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_deal_gt_group', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'More dealerships in the deal than in the group', 'why': 'A deal cannot cover more locations than the group has: one of the two numbers is wrong.'},
-    {'id': 'nb_products', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_products', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': '"[Cars] Products" is empty', 'why': 'Say what is being sold: App, API, 360…'},
-    {'id': 'nb_legal_name', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_legal_name', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': '"[CC] Company legal name" is empty', 'why': 'Printed on the invoice.'},
-    {'id': 'nb_brands', 'scope': 'New business · Closed won and after', 'severity': 'warning', 'section': 'Create a deal',
+    {'id': 'nb_brands', 'scope': 'Signed deals · New business', 'severity': 'warning', 'section': 'Create a deal',
      'title': '"Affiliated brands" is empty', 'why': 'Official franchise brands only.'},
-    {'id': 'nb_no_company', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_no_company', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No company associated to the deal', 'why': 'Every deal must be linked to its company (and to every location it covers).'},
-    {'id': 'nb_no_contact', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Create a deal',
+    {'id': 'nb_no_contact', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No contact associated to the deal', 'why': 'Every deal must be linked to a contact.'},
-    {'id': 'nb_won_dms', 'scope': 'New business · Closed won and after', 'severity': 'error', 'section': 'Close a deal as won',
+    {'id': 'nb_won_dms', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Close a deal as won',
      'title': 'DMS is empty', 'why': 'The CSM needs the DMS for the technical integration.'},
-    {'id': 'nb_active_client', 'scope': 'New business · open deals', 'severity': 'warning', 'section': 'Create an upsell, downsell or amendment',
-     'title': 'Open deal on a company that is already an active client', 'why': 'If it replaces their current contract, it belongs in Renewals & upsells.'},
     # Renewals & upsells — signed deals
-    {'id': 'ren_type', 'scope': 'Renewals & upsells · Closed won and after', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
+    {'id': 'ren_type', 'scope': 'Signed deals · Renewals & upsells', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
      'title': '"Renewal type" is empty', 'why': 'Upsell, downsell, amendment… drives how the contract is replaced.'},
-    {'id': 'ren_parent', 'scope': 'Renewals & upsells · Closed won and after', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
+    {'id': 'ren_parent', 'scope': 'Signed deals · Renewals & upsells', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
      'title': 'Not linked to the previous deal with the "Parent deal" label', 'why': 'Without it the old contract is not stopped and the client can be billed twice.'},
-    {'id': 'ren_new_deal_name', 'scope': 'Renewals & upsells · Closed won and after', 'severity': 'warning', 'section': 'Create an upsell, downsell or amendment',
+    {'id': 'ren_new_deal_name', 'scope': 'Signed deals · Renewals & upsells', 'severity': 'warning', 'section': 'Create an upsell, downsell or amendment',
      'title': 'Named "New Deal" but in Renewals & upsells', 'why': 'Check it really replaces an existing contract and is not new business.'},
     # Both pipelines — signed deals
-    {'id': 'won_dms_other', 'scope': 'Both pipelines · Closed won and after', 'severity': 'warning', 'section': 'Close a deal as won',
+    {'id': 'won_dms_other', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
      'title': 'DMS set to "Other"', 'why': 'Be specific: the CSM needs the real DMS.'},
-    {'id': 'won_auto_renew', 'scope': 'Both pipelines · Closed won and after', 'severity': 'warning', 'section': 'Close a deal as won',
+    {'id': 'won_auto_renew', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
      'title': '"Revoke auto-renew?" is empty', 'why': 'It defines the renewal rules.'},
-    {'id': 'won_pinned_note', 'scope': 'Both pipelines · Closed won and after', 'severity': 'warning', 'section': 'Close a deal as won',
+    {'id': 'won_pinned_note', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
      'title': 'No pinned handover note for the CSM', 'why': 'Operational contact, locations, features to activate… so onboarding can start.'},
-    {'id': 'won_no_line_items', 'scope': 'Both pipelines · Closed won and after', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'won_no_line_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'No line items', 'why': 'No line items = no ARR and no subscription.'},
-    {'id': 'won_one_time', 'scope': 'Both pipelines · Closed won and after', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'won_one_time', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'Line item billed "One-time" (set-up fees excluded)', 'why': 'Flagged on API deals, or when every line item is one-time. Not counted as recurring revenue, so not in signings or bonus.'},
-    {'id': 'won_no_term', 'scope': 'Both pipelines · Closed won and after', 'severity': 'warning', 'section': 'Build the quote and line items',
+    {'id': 'won_no_term', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Build the quote and line items',
      'title': 'Recurring line item without a Term', 'why': 'Term = contract duration in months.'},
-    {'id': 'won_amount', 'scope': 'Both pipelines · Closed won and after', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'won_amount', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'Deal amount is empty or 0', 'why': 'The amount comes from the recurring line items.'},
-    # Lost
-    {'id': 'nb_lost_reason', 'scope': 'New business · Closed lost / Rejected by AE', 'severity': 'error', 'section': 'Close lost or disqualify',
+    # Open deals
+    {'id': 'nb_active_client', 'scope': 'Open deals · New business', 'severity': 'warning', 'section': 'Create an upsell, downsell or amendment',
+     'title': 'Open deal on a company that is already an active client', 'why': 'If it replaces their current contract, it belongs in Renewals & upsells.'},
+    # Lost deals
+    {'id': 'nb_lost_reason', 'scope': 'Lost deals · New business', 'severity': 'error', 'section': 'Close lost or disqualify',
      'title': 'Lost without a lost reason', 'why': 'We need to know why we lose.'},
-    {'id': 'ren_lost_reason', 'scope': 'Renewals & upsells · Churned / Closed lost', 'severity': 'error', 'section': 'Close lost or disqualify',
+    {'id': 'ren_lost_reason', 'scope': 'Lost deals · Renewals & upsells', 'severity': 'error', 'section': 'Close lost or disqualify',
      'title': 'Churned or lost without a reason', 'why': 'We need to know why clients leave.'},
 ]
 CHECKS_BY_ID = {c['id']: c for c in CHECKS}
