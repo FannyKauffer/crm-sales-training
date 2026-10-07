@@ -459,7 +459,7 @@ function renderDeals() {
     return `<div class="bg-white rounded-xl border ${d.flags.some(f => f.severity === 'error') ? 'border-red-100' : 'border-gray-100'} p-4">
       <div class="flex flex-wrap justify-between gap-2 mb-2">
         <div class="min-w-0">
-          <div class="font-medium text-gray-800">${esc(d.name)}</div>
+          <a href="${esc(d.url)}" target="_blank" rel="noopener" class="font-medium text-gray-800 hover:text-indigo-600 hover:underline">${esc(d.name)} <span class="text-xs text-indigo-500">↗ HubSpot</span></a>
           <div class="text-xs text-gray-400">${esc(d.pipeline)} · ${esc(d.stage)} · created ${esc(d.created)}${d.company ? ' · ' + esc(d.company) : ''}</div>
         </div>
         <div class="text-sm text-gray-500">${amount}</div>

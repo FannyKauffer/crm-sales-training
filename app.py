@@ -25,6 +25,8 @@ ALLOWED_DOMAIN = os.environ.get('ALLOWED_DOMAIN', 'carcutter.com')
 
 TOKEN = os.environ.get('HUBSPOT_API_TOKEN', '')
 BASE  = 'https://api.hubapi.com'
+# Link to open a deal in HubSpot (EU data centre, portal 26533299)
+HUBSPOT_DEAL_URL = os.environ.get('HUBSPOT_DEAL_URL', 'https://app-eu1.hubspot.com/contacts/26533299/record/0-3/{id}')
 
 CLAUDE_MODEL = os.environ.get('CLAUDE_MODEL', 'claude-opus-5')
 
@@ -503,6 +505,7 @@ def my_deals():
             'amount': p.get('amount'),
             'currency': p.get('deal_currency_code') or '',
             'company': ', '.join(c.get('name') or '' for c in cos),
+            'url': HUBSPOT_DEAL_URL.format(id=did),
             'flags': flags,
         })
 
