@@ -7,13 +7,21 @@ from pathlib import Path
 from flask import Flask, jsonify, send_from_directory, request, session, redirect, url_for, render_template_string
 from dotenv import load_dotenv
 from functools import wraps
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 
 load_dotenv()
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.environ.get('SECRET_KEY', 'crm-sales-training-2026')
+app.config.update(SESSION_COOKIE_SAMESITE='Lax', SESSION_COOKIE_HTTPONLY=True,
+                  SESSION_COOKIE_SECURE=os.environ.get('RAILWAY_ENVIRONMENT') is not None,
+                  PERMANENT_SESSION_LIFETIME=timedelta(days=7))
 
-PASSWORD = os.environ.get('APP_PASSWORD', 'CCsales2026$')
+# Google SSO — same OAuth client as the other CarCutter webapps (Pricing EU / AU-CA)
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID',
+                                  '77392442255-sn804nmg4rvr8d8psqpu3ku3kk50gv6t.apps.googleusercontent.com')
+ALLOWED_DOMAIN = os.environ.get('ALLOWED_DOMAIN', 'carcutter.com')
 
 TOKEN = os.environ.get('HUBSPOT_API_TOKEN', '')
 BASE  = 'https://api.hubapi.com'
@@ -52,7 +60,7 @@ DEAL_PROPS = [
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not session.get('authenticated'):
+        if not session.get('user'):
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated
@@ -61,7 +69,7 @@ def login_required(f):
 def api_login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not session.get('authenticated'):
+        if not session.get('user'):
             return jsonify({'error': 'Unauthorized'}), 401
         return f(*args, **kwargs)
     return decorated
@@ -72,43 +80,82 @@ LOGIN_HTML = '''<!DOCTYPE html>
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CRM Sales Training — Login</title>
+  <title>CRM Sales Training — Sign in</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-gray-50 min-h-screen flex items-center justify-center">
-  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 w-full max-w-sm">
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 w-full max-w-sm text-center">
+    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-bold flex items-center justify-center mx-auto mb-4">C</div>
     <h1 class="text-xl font-bold text-gray-800 mb-1">CRM Sales Training</h1>
-    <p class="text-sm text-gray-400 mb-6">Enter the password to continue</p>
-    {% if error %}
-    <p class="text-sm text-red-500 mb-4 bg-red-50 px-3 py-2 rounded-lg">Wrong password</p>
-    {% endif %}
-    <form method="post">
-      <input type="password" name="password" autofocus placeholder="Password"
-        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-300"/>
-      <button type="submit"
-        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
-        Continue
-      </button>
-    </form>
+    <p class="text-sm text-gray-400 mb-6">Sign in with your CarCutter account</p>
+    <div id="g_id_onload"
+      data-client_id="{{ client_id }}"
+      data-callback="handleCredential"
+      data-auto_select="{{ 'false' if signed_out else 'true' }}">
+    </div>
+    <div class="flex justify-center">
+      <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"
+        data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
+    </div>
+    <p id="auth-err" class="{% if not error %}hidden {% endif %}text-sm text-red-500 mt-4 bg-red-50 px-3 py-2 rounded-lg">{{ error or '' }}</p>
   </div>
+  <script>
+    async function handleCredential(r) {
+      const err = document.getElementById('auth-err');
+      const resp = await fetch('/auth/google', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential: r.credential }),
+      });
+      if (resp.ok) { location.href = '/'; return; }
+      const data = await resp.json().catch(() => ({}));
+      err.textContent = data.error || 'Sign-in failed';
+      err.classList.remove('hidden');
+      try { google.accounts.id.disableAutoSelect(); } catch (e) {}
+    }
+  </script>
 </body>
 </html>'''
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login')
 def login():
-    if request.method == 'POST':
-        if request.form.get('password') == PASSWORD:
-            session['authenticated'] = True
-            return redirect(url_for('index'))
-        return render_template_string(LOGIN_HTML, error=True)
-    return render_template_string(LOGIN_HTML, error=False)
+    if session.get('user'):
+        return redirect(url_for('index'))
+    return render_template_string(LOGIN_HTML, client_id=GOOGLE_CLIENT_ID, error=None,
+                                  signed_out=request.args.get('signed_out') == '1')
+
+
+@app.route('/auth/google', methods=['POST'])
+def auth_google():
+    """Verify the Google ID token server-side and open a session for @carcutter.com accounts only."""
+    credential = (request.get_json(silent=True) or {}).get('credential', '')
+    try:
+        info = id_token.verify_oauth2_token(credential, google_requests.Request(), GOOGLE_CLIENT_ID)
+    except ValueError:
+        return jsonify({'error': 'Invalid Google sign-in, please try again.'}), 401
+
+    email = (info.get('email') or '').lower()
+    if not info.get('email_verified') or not email.endswith('@' + ALLOWED_DOMAIN):
+        return jsonify({'error': f'Access restricted to CarCutter accounts (@{ALLOWED_DOMAIN}).'}), 403
+
+    session.clear()
+    session.permanent = True
+    session['user'] = {'email': email, 'name': info.get('name') or email, 'picture': info.get('picture') or ''}
+    return jsonify({'ok': True})
+
+
+@app.route('/api/me')
+@api_login_required
+def me():
+    return jsonify(session['user'])
 
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('login'))
+    # signed_out=1 turns off Google auto-select so the user is not signed straight back in
+    return redirect(url_for('login', signed_out=1))
 
 
 @app.errorhandler(Exception)
@@ -328,7 +375,7 @@ def owners():
             if not any(kw in re.split(r'[^a-z]+', t.lower()) for t in teams for kw in SALES_TEAM_KEYWORDS):
                 continue
             name = f"{o.get('firstName', '')} {o.get('lastName', '')}".strip() or o.get('email', '')
-            out.append({'id': o['id'], 'name': name, 'teams': teams})
+            out.append({'id': o['id'], 'name': name, 'email': (o.get('email') or '').lower(), 'teams': teams})
         after = data.get('paging', {}).get('next', {}).get('after')
         if not after:
             break

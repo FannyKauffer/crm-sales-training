@@ -34,7 +34,11 @@
         <button data-tab="ask" class="tab px-3 py-1.5 rounded-md">💬 Ask a question</button>
         <button data-tab="deals" class="tab px-3 py-1.5 rounded-md">🔍 My deals</button>
       </nav>
-      <a href="/logout" class="text-xs text-gray-400 hover:text-gray-600">Log out</a>
+      <div class="flex items-center gap-2 text-xs text-gray-500">
+        <img id="user-avatar" class="w-6 h-6 rounded-full hidden" alt="" referrerpolicy="no-referrer"/>
+        <span id="user-name" class="font-medium"></span>
+        <a href="/logout" class="border border-gray-200 rounded px-2 py-0.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50">Sign out</a>
+      </div>
     </div>
   </header>
 
@@ -203,7 +207,10 @@ async function loadOwners() {
   if (ownersLoaded) return;
   try {
     const { owners } = await api('/api/owners');
+    await mePromise;
     let saved = null; try { saved = localStorage.getItem('owner'); } catch (e) {}
+    // Default to the signed-in rep's own HubSpot owner
+    if (!saved && me) saved = (owners.find(o => o.email === me.email) || {}).id || null;
     $('#owner').innerHTML = '<option value="">Choose your name…</option>' +
       owners.map(o => `<option value="${o.id}" ${o.id === saved ? 'selected' : ''}>${esc(o.name)} (${esc(o.teams.join(', '))})</option>`).join('');
     ownersLoaded = true;
@@ -265,6 +272,12 @@ function renderDeals() {
 }
 
 // ── Init ──
+let me = null;
+const mePromise = api('/api/me').then(u => {
+  me = u;
+  $('#user-name').textContent = u.name;
+  if (u.picture) { $('#user-avatar').src = u.picture; $('#user-avatar').classList.remove('hidden'); }
+}).catch(() => {});
 loadGuide().catch(err => $('#guide').textContent = err.message);
 let startTab = 'guide'; try { startTab = localStorage.getItem('tab') || 'guide'; } catch (e) {}
 showTab(startTab);
