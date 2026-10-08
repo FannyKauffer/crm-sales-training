@@ -25,7 +25,7 @@ New / attempting → Contacted → Engaged → Meeting scheduled → **Qualified
 - **Demo** — log the demo meeting on the deal, contact and company.
 - **Testing** — run the agreed test.
 - **Negotiation / Trade** — quote + line items, contract duration, billing email.
-- **Closed won** — contract signed. See *Close a deal as won*.
+- **Closed won** — set **automatically when the quote is signed**. Do your checks before sending the contract: see *Close a deal as won*.
 
 ⚠️ Fill the mandatory fields **when you move the deal**, not at the end. HubSpot blocks the stage change if they are missing.
 
@@ -192,9 +192,13 @@ Contact: **Job title in English** and **Buying role** (several if needed).
 
 ## 🏆 Close a deal as won
 
-> The checklist before Closed won, so the CSM can start onboarding.
+> Check everything **before you send the contract for signature**: once signed, the deal closes itself.
 
-1. **Line items** are on the deal (no line items = no ARR, no subscription).
+> 🛑 **The deal moves to Closed won automatically when the quote is signed.** From that point you **don't have to do anything** with the deal: HubSpot and the CSM take over (Onboarding, then Contract is live). So **all the checks below happen before sending the contract**.
+
+**Before sending the contract for signature:**
+
+1. **Line items** are on the quote and the deal (no line items = no ARR, no subscription).
 2. Fill these fields (no blanks, no defaults):
    - **Contract duration (in months)**: subscription end date and renewals are calculated from it
    - **Number of dealerships in group** (company) and **Number of dealerships involved in this deal** (deal)
@@ -208,9 +212,9 @@ Contact: **Job title in English** and **Buying role** (several if needed).
    - Features to activate or not (Next gen 360, Stock images, Shotlist, Hotspots…)
    - Standing inventory interest (one-time fee)
    - Anything else the CSM should know
-4. Contract signed **outside HubSpot** (paper, email)? Deal → View all properties → **Customer procurement process = Yes**, otherwise onboarding never starts.
+**Only exception: contract signed outside HubSpot** (paper, email). There is no e-signature to trigger the automation, so set Deal → View all properties → **Customer procurement process = Yes**, otherwise onboarding never starts.
 
-> 🛑 **Stop at Closed won.** HubSpot moves the deal to **Onboarding**, then **Contract is live**, on its own. **Never move it there yourself**: it can break the onboarding, subscription and billing automations.
+⚠️ Never move the deal to **Onboarding** or **Contract is live** yourself: it can break the onboarding, subscription and billing automations.
 
 ## ❌ Close lost or disqualify
 
