@@ -173,7 +173,7 @@ Contact: **Job title in English** and **Buying role** (several if needed).
 |---|---|---|---|
 | **API, price per car or price per image** (minimum number of cars/images per year) | **Minimum commitment** | **Annually** | Monthly, on actual consumption |
 | **Upfront payment** of a number of cars/images | **Credit pack** (only for upfront payments) | Annually (upfront) | Upfront at signature, then overconsumption |
-| **No commitment** | **PayG** | | On consumption |
+| **No commitment** | **PayG**: avoid it, **VP approval only** | | On consumption |
 | **Flat monthly fee** (location or group subscription) | **Flat rate monthly** (standard) | Monthly | Monthly flat fee |
 | Flat annual fee | **Flat rate annually**: avoid it | | |
 
