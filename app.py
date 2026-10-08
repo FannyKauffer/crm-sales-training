@@ -303,8 +303,6 @@ CHECKS = [
      'title': '"Number of dealerships involved in this deal" is empty', 'why': 'Tells how many locations this contract covers. Set 1 if single location.'},
     {'id': 'nb_deal_gt_group', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'More dealerships in the deal than in the group', 'why': 'A deal cannot cover more locations than the group has: one of the two numbers is wrong.'},
-    {'id': 'nb_products', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
-     'title': '"[Cars] Products" is empty', 'why': 'Say what is being sold: App, API, 360…'},
     {'id': 'nb_no_company', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No company associated to the deal', 'why': 'Every deal must be linked to its company (and to every location it covers).'},
     {'id': 'nb_no_contact', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
@@ -371,8 +369,6 @@ def check_deal(p, companies, line_items, has_parent_deal):
                 flags.append(flag('nb_deal_dealerships'))
             if total is not None and in_deal is not None and in_deal > total:
                 flags.append(flag('nb_deal_gt_group', f'{in_deal} dealerships in the deal but only {total} in the group'))
-            if not p.get('cars__product'):
-                flags.append(flag('nb_products'))
             if companies == []:
                 flags.append(flag('nb_no_company'))
             if to_int(p.get('num_associated_contacts')) in (None, 0):

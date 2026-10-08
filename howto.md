@@ -139,7 +139,7 @@ Contact: **Job title in English** and **Buying role** (several if needed).
 | HQ name | If part of a group |
 | Total number of dealerships in group | Whole group, **1** if single location |
 | Number of dealerships involved in this deal | Locations covered by **this** contract, **1** if single. Never more than the group |
-| [Cars] Products | App, API, 360… |
+| [Cars] Products | App, API, 360… (optional) |
 | DMS | The dealership's DMS (optional) |
 | Affiliated brands | Official franchises only |
 | [CC] Company legal name | Legal name printed on the invoice (optional) |
