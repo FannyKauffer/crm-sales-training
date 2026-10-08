@@ -179,7 +179,10 @@ Contact: **Job title in English** and **Buying role** (several if needed).
 
 4. HQ pays for all locations → **one quote** on the parent. Each location pays → **one deal and one quote per location**.
 5. **New business: always add a showroom** line item (Standard, Custom or Tailor-made Showroom).
-6. **Set-up fees only deal** (no subscription)? Set **Set-up fees only (no recurring) = Yes** on the deal and use **only** showroom, integration (IMS/DMS, FTP/SFTP, Cloud server) or *Standing inventory processing fee* line items. No subscription, flat fee or API.
+6. **"Set-up fees only (no recurring)" = Yes**: tick it **only** when the deal sells nothing but one-off services:
+   - ✅ **Showroom**, **integration** (IMS/DMS, FTP/SFTP, Cloud server) or **inventory reprocessing** (*Standing inventory processing fee*)
+   - ❌ **No ARR, no recurring amount**: no subscription, flat fee, price per car or API on the deal
+   - ⚠️ These deals **don't create a subscription and never renew**. If the client also buys anything recurring, leave it unticked.
 
 💡 **Minimum commitment set to Annually** shows the full commitment on the quote, even though Finance bills monthly on consumption. Add a comment to the buyer to clarify that billing is monthly.
 
