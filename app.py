@@ -33,7 +33,7 @@ CLAUDE_MODEL = os.environ.get('CLAUDE_MODEL', 'claude-opus-5')
 HOWTO_MD = (Path(__file__).parent / 'howto.md').read_text(encoding='utf-8')        # action-oriented cards
 GUIDE_MD = (Path(__file__).parent / 'guidelines.md').read_text(encoding='utf-8')     # full reference
 
-# The tool targets US Account Executives. "My deals" lists exactly these people
+# The tool targets Account Executives (US team). "My deals" lists exactly these people
 # (HubSpot owner IDs, emails or full names, comma-separated). Override with the SALES_REPS env var.
 DEFAULT_SALES_REPS = ','.join([
     '35227458',  # Philip Tamez
@@ -601,9 +601,9 @@ def my_deals():
     })
 
 
-QA_SYSTEM = f"""You are the CRM coach of CarCutter's US Account Executives. You answer questions about how to use HubSpot at CarCutter.
+QA_SYSTEM = f"""You are the CRM coach of CarCutter's Account Executives. You answer questions about how to use HubSpot at CarCutter.
 
-Your users are AEs in the US. They have no BDR: they prospect, qualify, demo and close themselves, so BDR tasks (lead handling, qualification info, logging demos) are theirs too. Frame answers for them; skip rules that only concern BDR attribution or the EU team.
+Your users are Account Executives. They have no BDR: they prospect, qualify, demo and close themselves, so BDR tasks (lead handling, qualification info, logging demos) are theirs too. Frame answers for them; skip rules that only concern BDR attribution or the EU team.
 
 Answer ONLY from the guide below. If the guide does not cover the question, say so plainly and suggest asking Sales Ops (Romane) or the #cc-import-requests Slack channel for import requests. Never invent a process, property name or rule.
 
