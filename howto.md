@@ -253,14 +253,14 @@ Always add a **note** with context (e.g. "Less than 100 cars on lot").
 2. Set **Renewal type** yourself: Renewal - upsell / Renewal - downsell / Contract amendment… (no automation sets it).
 3. Quote with **all line items of the new contract** (existing products + new ones), not only what's added.
 4. Link the deals: open the **original deal** → **More → Edit association labels → Parent deal → Update**. The original is the parent, the new deal the child.
-   - **One child has only one parent**: Year 1 is Year 2's parent, Year 2 is Year 3's parent.
+   - **A child usually has one parent**: Year 1 is Year 2's parent, Year 2 is Year 3's parent.
    - Only link deals that **directly replace** each other.
 5. Associate the **company** (and contact).
 6. **Configuration ticket: nothing to do.** Any Renewal type other than *Flat renewal* creates it automatically, which is why step 2 matters.
 
 When the upsell is won, HubSpot automatically stops the old contract (old deal → Contract has expired). Without the Parent deal link, **the client can be billed twice**.
 
-**Central deal replacing rooftop deals**: each rooftop deal is a **Parent**, the new central deal is the **Child**.
+**Exception: several rooftop deals merged into one centralized deal.** Each rooftop deal is a **Parent** of the new central deal (the **Child**), so the central deal has several parents.
 
 > 🛑 **Not a replacement = not a child.** A set-up fee or add-on deal (e.g. a new showroom) is only **associated** to the existing deal, never labelled Child.
 

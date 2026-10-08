@@ -15,7 +15,7 @@ HubSpot is the single source of truth for all our accounts, prospects and custom
 
 ## Import requests
 
-- **Never run an import in HubSpot yourself.** Pick the right template, **make a copy**, fill it in and send it to your Sales Manager or Sales Ops (Romane).
+- **Never use HubSpot's own import.** Companies in bulk: use the **Company Importer** (https://lead-import-production.up.railway.app/), which checks for duplicates. Otherwise pick the right template, **make a copy**, fill it in and send it to your Sales Manager or Sales Ops (Romane).
 - Templates: Contact import / Company import / Company + contact / BDR template (child companies of a parent).
 - Companies are matched by **domain name**, not company name. A wrong or missing domain creates duplicates.
 - Contacts are matched by **email**. If the email already exists (even as a secondary email), the import fails.
@@ -208,9 +208,9 @@ Each stage has mandatory fields (gates). Fill them when you move the deal, not a
 1. Create the deal in the **Renewals & upsells** pipeline, **never in New Business**.
 2. Set the **Renewal type** (Flat renewal, Renewal - upsell, Renewal - downsell, Contract amendment, API Package renewal, Conversion to commit…).
 3. The new deal must contain the **full updated contract** (existing + new line items), not only the added product.
-4. Associate old and new deals: on the **original deal** → More → Edit association labels → **Parent deal**. The new deal is the child. Year 1 is parent of Year 2, Year 2 of Year 3. A child has only one parent.
+4. Associate old and new deals: on the **original deal** → More → Edit association labels → **Parent deal**. The new deal is the child. Year 1 is parent of Year 2, Year 2 of Year 3. A child usually has one parent; exception: several rooftop deals merged into one centralized deal are all Parents of the central deal.
 5. On the original deal: Actions → **Revoke auto-renew = Yes** with reason **Upsold**, **Downsold** or **Contract amendment**. Skipping this can bill the client twice.
-6. New product needing setup → onboarding ticket: pipeline CarCutter Onboarding, name `{Deal name - feature name}`, owner = CSM, associated to company and contact, status New.
+6. Configuration ticket: created automatically for any Renewal type other than Flat renewal. No action needed.
 
 ## Handover to CSM
 
