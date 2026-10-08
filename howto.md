@@ -6,9 +6,9 @@
 
 > 🛑 **Your job stops at Closed won.** **Onboarding**, **Contract is live** and **Contract has expired** are set **automatically** by HubSpot. **Never move a deal to these stages yourself**: it can break the onboarding, subscription and billing automations.
 
-**1. Prospecting happens on the LEAD** (pipeline *New leads*)
+**1. Prospecting happens on the LEAD** (outbound: pipeline *New leads* · inbound: pipeline *Inbound & Lead Gen*)
 
-New / attempting → Contacted → Engaged → Meeting scheduled → **Qualified** ⭐ (creates the deal) — or Disqualified / Not pursuing.
+New / attempting → **Contacted** (set automatically when you log an outreach) → … → **Qualified** ⭐ (creates the deal) — or **Disqualified** / **Not pursuing**, always with a reason. Never leave a lead stuck on *Contacted*.
 
 **2. Selling happens on the DEAL.** Pick the pipeline with one question: *does this replace an existing contract?*
 
@@ -53,25 +53,26 @@ Because you have no BDR, the company and contact info a BDR would normally fill 
 4. **Name** it with the convention:
    - Group HQ: `Group name - HQ` (e.g. *AutoNation - HQ*)
    - Location: business name (e.g. *AutoNation Miami*)
-5. Part of a group? In **Associate company with**, search the HQ and set the label **Parent Company** directly in the form.
+5. Part of a group? The **HQ is the Parent company**, at the top; every rooftop is a **Child** of the HQ. In **Associate company with**, search the HQ and set the label **Parent Company** directly in the form.
 6. Fill the key fields: **Client type**, **Total number of dealerships in group** (1 if single store, filled on the HQ), **DMS / IMS**, **Affiliated brands** (official franchises only), **Country**.
 
-⚠️ Many companies to add (a whole group)? Don't create them one by one or import yourself: see *Add the locations of a group*.
+⚠️ Many companies to add (a whole group)? Use the **Company Importer**: see *Add the locations of a group*.
 
 ## 🏬 Add the locations of a group
 
 > Create the child companies of a dealer group and link them to the HQ.
 
-**Up to 10 locations** — create them yourself:
+**Every location must exist as a company in HubSpot**, even when the contract is signed centrally by the HQ.
+
+**A few locations** — create them yourself:
 1. Open the **HQ company** → Companies section → **+ Add**.
 2. Create each location (business name + website) with the label **Child Company**.
 
-**More than 10 locations** — ask for an import:
-1. Copy the **child companies import template** from the Notion knowledge base, Module 1.
-2. Fill it in: name, domain, address, country of each location.
-3. Post it in Slack **#cc-import-requests** with the HQ name, HQ address, expected number of locations and website. Sales Ops runs the import.
+**Many locations** — use the **[Company Importer](https://lead-import-production.up.railway.app/)**: it creates companies in bulk and checks for duplicates before importing.
 
-⚠️ Never run an import in HubSpot yourself, and always **make a copy** of the template.
+Stuck? Post in Slack **#cc-import-requests** with the HQ name, HQ address, expected number of locations and website.
+
+⚠️ Never use HubSpot's own import tool: duplicates and mistakes are hard to undo.
 
 ✅ Check: the number of child companies should match **Total number of dealerships in group** on the HQ.
 
@@ -84,10 +85,13 @@ Because you have no BDR, the company and contact info a BDR would normally fill 
 2. Pipeline **New leads**, stage **New/Attempting**, lead type **New business**, vertical **Carcutter**, owner = you.
 3. Make sure a **contact** is attached (needed for sequences).
 
-**Inbound lead** (arrives automatically as `Inbound / [name]`)
-1. Call within minutes: speed is what converts inbounds.
-2. Move the lead through the stages, or straight to **Qualified** if you qualify it on the first call.
-3. At **Qualified**, HubSpot opens the deal creation form.
+**Inbound lead** — you get a notification when one is assigned to you (**1 contact · 1 company · 1 lead**)
+1. **Treat it within 2 hours max.**
+2. Find it: **CRM → Leads → Pipeline *Inbound & Lead Gen* → Lead type = Inbound**.
+3. Log your outreach: the lead moves to **Contacted** automatically.
+4. Then **always** move it on: **Qualified**, **Disqualified** or **Not pursuing**, with a reason. At **Qualified**, HubSpot opens the deal creation form.
+
+> 🛑 **Never leave a lead stuck on "Contacted".** Marketing uses your qualifications to improve targeting: no qualification = no visibility for them.
 
 ⚠️ **Never create a deal directly from an inbound**: always go through the lead, otherwise inbound conversion is lost.
 
@@ -140,8 +144,12 @@ Contact: **Job title in English** and **Buying role** (several if needed).
 | Affiliated brands | Official franchises only |
 | [CC] Company legal name | Legal name printed on the invoice |
 
-4. Associate the **company** and the **contact**.
-   - Contract signed by the HQ for several locations? Associate the **HQ company and every location covered**.
+4. Associate the **contact** and the right **companies**:
+
+| Contract | Associate the deal with |
+|---|---|
+| **Localized** (one rooftop signs and pays) | **The rooftop company only**. Don't link it to the HQ. |
+| **Centralized** (the HQ signs for several locations) | **The HQ AND every location company** the contract covers |
 
 ⚠️ Existing client buying more? That's not a new deal: see *Create an upsell*.
 
@@ -183,6 +191,7 @@ Contact: **Job title in English** and **Buying role** (several if needed).
    - ✅ **Showroom**, **integration** (IMS/DMS, FTP/SFTP, Cloud server) or **inventory reprocessing** (*Standing inventory processing fee*)
    - ❌ **No ARR, no recurring amount**: no subscription, flat fee, price per car or API on the deal
    - ⚠️ These deals **don't create a subscription and never renew**. If the client also buys anything recurring, leave it unticked.
+   - 🔗 Add-on for an existing client (e.g. a new showroom)? **Associate** the deal with the existing deal, but **never label it as a Child deal**: a child cancels and replaces its parent.
 
 💡 **Minimum commitment set to Annually** shows the full commitment on the quote, even though Finance bills monthly on consumption. Add a comment to the buyer to clarify that billing is monthly.
 
@@ -200,7 +209,6 @@ Contact: **Job title in English** and **Buying role** (several if needed).
 
 1. **Line items** are on the quote and the deal (no line items = no ARR, no subscription).
 2. Fill these fields (no blanks, no defaults):
-   - **Contract duration (in months)**: subscription end date and renewals are calculated from it
    - **Number of dealerships in group** (company) and **Number of dealerships involved in this deal** (deal)
    - **is multi-location deal?**
    - **DMS** (avoid "Other")
@@ -212,6 +220,11 @@ Contact: **Job title in English** and **Buying role** (several if needed).
    - Features to activate or not (Next gen 360, Stock images, Shotlist, Hotspots…)
    - Standing inventory interest (one-time fee)
    - Anything else the CSM should know
+**After signature, watch one thing: the contract duration**
+- **Contract duration (in months)** is filled **automatically by the Data team within 2 hours**. If it's still empty, you get a **notification**: fill it in.
+- **Multi-duration contract** (e.g. 2 months at €249, then 10 months at €299)? It can't be filled automatically: **fill it in yourself**.
+- Missing or wrong duration = no end date = **no renewal deal**.
+
 **Only exception: contract signed outside HubSpot** (paper, email). There is no e-signature to trigger the automation, so set Deal → View all properties → **Customer procurement process = Yes**, otherwise onboarding never starts.
 
 ⚠️ Never move the deal to **Onboarding** or **Contract is live** yourself: it can break the onboarding, subscription and billing automations.
@@ -232,18 +245,29 @@ Always add a **note** with context (e.g. "Less than 100 cars on lot").
 
 ## 📈 Create an upsell, downsell or amendment
 
-> The new deal replaces the old contract: it must contain the full contract.
+> The new deal (child) cancels and replaces the old one (parent): it must contain the full contract.
 
 @video https://www.loom.com/share/766ec4c162c844509a73288d56a1870d
 
 1. Create the deal in **CarCutter - Renewals & upsells** (never New business).
-2. Set **Renewal type**: Renewal - upsell / Renewal - downsell / Contract amendment…
+2. Set **Renewal type** yourself: Renewal - upsell / Renewal - downsell / Contract amendment… (no automation sets it).
 3. Quote with **all line items of the new contract** (existing products + new ones), not only what's added.
-4. Link the deals: open the **original deal** → Deals section → add the new deal → **More → Edit association labels → Parent deal**. The original is the parent, the new deal the child.
+4. Link the deals: open the **original deal** → **More → Edit association labels → Parent deal → Update**. The original is the parent, the new deal the child.
+   - **One child has only one parent**: Year 1 is Year 2's parent, Year 2 is Year 3's parent.
+   - Only link deals that **directly replace** each other.
 5. Associate the **company** (and contact).
-6. New product needing setup? Create a ticket: pipeline **CarCutter Onboarding**, name `{Deal name - feature}`, owner = the CSM, status **New**, associated to company and contact.
+6. **Configuration ticket: nothing to do.** Any Renewal type other than *Flat renewal* creates it automatically, which is why step 2 matters.
 
-When the upsell is won, HubSpot automatically stops the old contract (auto-renew revoked, old deal → Contract has expired). Without the Parent deal link, **the client can be billed twice**.
+When the upsell is won, HubSpot automatically stops the old contract (old deal → Contract has expired). Without the Parent deal link, **the client can be billed twice**.
+
+**Central deal replacing rooftop deals**: each rooftop deal is a **Parent**, the new central deal is the **Child**.
+
+> 🛑 **Not a replacement = not a child.** A set-up fee or add-on deal (e.g. a new showroom) is only **associated** to the existing deal, never labelled Child.
+
+**Client close to renewal?**
+- HubSpot creates the **renewal deal 40 days before the contract ends**. It belongs to the **CSM**: you help close the upsell when asked.
+- Don't hold a renewal open past its start date to negotiate an upsell: the CSM closes the renewal as Closed won, then **you open a separate upsell deal**.
+- Never move a deal to a stage after Closed won: it's automated.
 
 ## 📍 Add a location to a contract
 
@@ -255,6 +279,7 @@ When the upsell is won, HubSpot automatically stops the old contract (auto-renew
 1. New deal in **CarCutter - New business** on the **new location's company**.
 2. Number of dealerships involved in this deal = **1**.
 3. Normal flow: quote, Closed won, handover.
+4. It doesn't replace anything: **don't** label it as a Child of the group's deal.
 
 **Case B — the location joins the existing contract** (the HQ pays for everyone)
 1. It replaces the current contract → follow *Create an upsell* (Renewals & upsells, renewal type **Renewal - upsell**, **Parent deal** link).
@@ -287,6 +312,14 @@ Look at two properties on the company:
 - ❌ Never from the **company page**: it won't show on the lead or in dashboards.
 - Logged on the company by mistake? Open the activity → **Associations** → add the lead.
 - Tag every call in **Modjo** and remove other recording bots.
+
+## 📊 Check your data
+
+> A quick look each week catches the mistakes that block onboarding, billing and renewals.
+
+1. Open the **[Data Integrity Dashboard](https://app-eu1.hubspot.com/reports-dashboard/26533299/view/111940634)** in HubSpot and filter on your name.
+2. Run **My deals** in this app: each issue links to the how-to that fixes it.
+3. Fix your deals directly in HubSpot (each deal in My deals has a ↗ HubSpot link).
 
 ## ✉️ Enroll leads in a sequence
 

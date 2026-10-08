@@ -290,6 +290,7 @@ function showHowto(s) {
   $('#hd-title').textContent = h.title;
   $('#hd-summary').textContent = h.summary;
   $('#hd-body').innerHTML = marked.parse(h.body);
+  $('#hd-body').querySelectorAll('a[href^="http"]').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
   const embed = h.video && loomEmbed(h.video);
   $('#hd-video').classList.toggle('hidden', !embed);
   $('#hd-video').innerHTML = embed ? `<iframe src="${embed}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>` : '';

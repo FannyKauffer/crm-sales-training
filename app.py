@@ -332,9 +332,11 @@ CHECKS = [
     {'id': 'won_no_term', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Build the quote and line items',
      'title': 'Recurring line item without a Term', 'why': 'Term = contract duration in months.'},
     {'id': 'won_duration', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Close a deal as won',
-     'title': '"Contract duration (in months)" is empty', 'why': 'Subscription end date and renewal workflows are calculated from it. Not required on set-up fees only deals.'},
+     'title': '"Contract duration (in months)" is empty', 'why': 'Filled automatically by the Data team within 2 hours of signature (checked after 24h). Fill it yourself for multi-duration contracts. No duration = no end date = no renewal deal. Not required on set-up fees only deals.'},
     {'id': 'won_setup_only_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': '"Set-up fees only" deal with other line items', 'why': 'A set-up fees only deal may only contain showroom, integration or inventory processing fees, no subscription, flat fee or API.'},
+    {'id': 'won_setup_only_child', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
+     'title': '"Set-up fees only" deal labelled as a Child deal', 'why': 'A child cancels and replaces its parent. A set-up fee or add-on deal must only be associated to the existing deal, without the Parent/Child label.'},
     {'id': 'won_amount', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'Deal amount is empty or 0', 'why': 'The amount comes from the recurring line items.'},
     # Open deals
@@ -391,7 +393,7 @@ def check_deal(p, companies, line_items, has_parent_deal):
             if stage in (NB_CLOSED_WON, NB_ONBOARDING) and not setup_only and line_items is not None \
                     and not any('showroom' in (li.get('name') or '').lower() for li in line_items):
                 flags.append(flag('nb_no_showroom'))
-            flags += check_won_common(p, line_items)
+            flags += check_won_common(p, line_items, has_parent_deal)
 
         # Open NB deal on a company that is already an active client → probably an upsell
         if not won and not lost:
@@ -405,24 +407,42 @@ def check_deal(p, companies, line_items, has_parent_deal):
     elif pipeline == REN_PIPELINE:
         won, lost = stage in REN_WON, stage in REN_LOST
         if won:
+            setup_only = (p.get('setup_fees_only_no_recurring') or '').lower() == 'true'
             if not p.get('renewal_type'):
                 flags.append(flag('ren_type'))
-            if has_parent_deal is False:
+            if has_parent_deal is False and not setup_only:
                 flags.append(flag('ren_parent'))
             if 'new deal' in name.lower():
                 flags.append(flag('ren_new_deal_name'))
-            flags += check_won_common(p, line_items)
+            flags += check_won_common(p, line_items, has_parent_deal)
         if lost and not (p.get('closed_lost_reason') or p.get('closed_lost_reason___category')):
             flags.append(flag('ren_lost_reason'))
 
     return flags
 
 
-def check_won_common(p, line_items):
+def closed_hours_ago(p):
+    """Hours since closedate (HubSpot ISO string or epoch ms), None if unknown."""
+    v = p.get('closedate')
+    if not v:
+        return None
+    try:
+        dt = (datetime.fromisoformat(v.replace('Z', '+00:00')) if '-' in str(v)
+              else datetime.fromtimestamp(int(v) / 1000, tz=timezone.utc))
+        return (datetime.now(timezone.utc) - dt).total_seconds() / 3600
+    except (ValueError, TypeError):
+        return None
+
+
+def check_won_common(p, line_items, has_parent_deal=None):
     flags = []
     setup_only = (p.get('setup_fees_only_no_recurring') or '').lower() == 'true'
-    if not setup_only and to_int(p.get('contractdurationinmonths')) is None:
+    # Duration is pushed by the Data team within ~2h of signature: only flag after 24h
+    hours = closed_hours_ago(p)
+    if not setup_only and to_int(p.get('contractdurationinmonths')) is None and (hours is None or hours >= 24):
         flags.append(flag('won_duration'))
+    if setup_only and has_parent_deal:
+        flags.append(flag('won_setup_only_child'))
     if setup_only and line_items:
         wrong = [li.get('name') or '?' for li in line_items
                  if li.get('recurringbillingfrequency')
@@ -531,8 +551,9 @@ def my_deals():
     co_err, li_err, dd_err = [], [], []
     deal_companies = batch_associations(s, 'deals', 'companies', ids, co_err)
     deal_line_items = batch_associations(s, 'deals', 'line_items', ids, li_err)
-    ren_ids = [d['id'] for d in raw if d['properties'].get('pipeline') == REN_PIPELINE]
-    deal_deals = batch_associations(s, 'deals', 'deals', ren_ids, dd_err)
+    link_ids = [d['id'] for d in raw if d['properties'].get('pipeline') == REN_PIPELINE
+                or (d['properties'].get('setup_fees_only_no_recurring') or '').lower() == 'true']
+    deal_deals = batch_associations(s, 'deals', 'deals', link_ids, dd_err)
 
     company_ids = {a['id'] for lst in deal_companies.values() for a in lst}
     companies = batch_read(s, 'companies', company_ids, ['name', 'company_activity_status'], co_err)
