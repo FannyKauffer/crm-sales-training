@@ -195,7 +195,7 @@ Each stage has mandatory fields (gates). Fill them when you move the deal, not a
 - **Commitment type** (source: Notion "Quotes / line items creation"):
   - **Minimum commitment**: API, price-per-car and price-per-image contracts. Set **Billing frequency = Annually** so the full commitment shows on the quote; Finance still bills monthly on actual consumption (add a comment to the buyer to clarify).
   - **Credit pack**: only for upfront payments.
-  - **PayG**: no commitment.
+  - **PayG**: no commitment. Avoid it: **VP approval only**.
   - **Flat rate monthly**: the standard option for monthly flat-rate contracts.
   - **Flat rate annually**: should generally be avoided.
   - Finance bills PayG and Minimum commitment contracts on consumption.
