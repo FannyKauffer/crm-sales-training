@@ -310,7 +310,7 @@ CHECKS = [
     {'id': 'nb_won_dms', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Close a deal as won',
      'title': 'DMS is empty', 'why': 'The CSM needs the DMS for the technical integration.'},
     {'id': 'nb_no_showroom', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Build the quote and line items',
-     'title': 'No showroom line item (Closed won / Onboarding)', 'why': 'Every new business contract needs a showroom line item so onboarding can set it up. Set-up fees only deals are not checked.'},
+     'title': 'No showroom line item (Closed won / Onboarding)', 'why': 'Every new business contract needs a showroom line item so onboarding can set it up. If the company already has a contract, this deal is probably an upsell or renewal and belongs in Renewals & upsells. Set-up fees only deals are not checked.'},
     # Renewals & upsells — signed deals
     {'id': 'ren_type', 'scope': 'Signed deals · Renewals & upsells', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
      'title': '"Renewal type" is empty', 'why': 'Upsell, downsell, amendment… drives how the contract is replaced.'},
@@ -337,7 +337,7 @@ CHECKS = [
      'title': 'Deal amount is empty or 0', 'why': 'The amount comes from the recurring line items.'},
     # Open deals
     {'id': 'nb_active_client', 'scope': 'Open deals · New business', 'severity': 'warning', 'section': 'Create an upsell, downsell or amendment',
-     'title': 'Open deal on a company that is already an active client', 'why': 'If it replaces their current contract, it belongs in Renewals & upsells.'},
+     'title': 'Open deal on a company that already has a live contract', 'why': 'If it adds to or replaces their current contract, it belongs in Renewals & upsells as an upsell or renewal.'},
     # Lost deals
     {'id': 'nb_lost_reason', 'scope': 'Lost deals · New business', 'severity': 'error', 'section': 'Close lost or disqualify',
      'title': 'Lost without a lost reason', 'why': 'We need to know why we lose.'},
@@ -354,8 +354,10 @@ def flag(check_id, detail=None):
             'section': slug(c['section'])}
 
 
-def check_deal(p, companies, line_items, has_parent_deal):
-    """companies / line_items / has_parent_deal are None when HubSpot could not be read: dependent checks are skipped."""
+def check_deal(p, companies, line_items, has_parent_deal, other_contracts=None):
+    """companies / line_items / has_parent_deal are None when HubSpot could not be read: dependent checks are skipped.
+    other_contracts: the company's other signed deals [{'name', 'stage', 'live'}], used to spot upsells created as new business."""
+    other_contracts = other_contracts or []
     pipeline, stage = p.get('pipeline'), p.get('dealstage')
     name = p.get('dealname') or ''
     flags = []
@@ -382,14 +384,22 @@ def check_deal(p, companies, line_items, has_parent_deal):
             setup_only = (p.get('setup_fees_only_no_recurring') or '').lower() == 'true'
             if stage in (NB_CLOSED_WON, NB_ONBOARDING) and not setup_only and line_items is not None \
                     and not any('showroom' in (li.get('name') or '').lower() for li in line_items):
-                flags.append(flag('nb_no_showroom'))
+                if other_contracts:
+                    c = other_contracts[0]
+                    flags.append(flag('nb_no_showroom',
+                                      f'No showroom line item, and the company already has a contract ("{c["name"]}", {c["stage"]}): '
+                                      'if this deal adds to or replaces it, it should be an upsell or renewal in Renewals & upsells'))
+                else:
+                    flags.append(flag('nb_no_showroom'))
             flags += check_won_common(p, line_items, has_parent_deal)
 
         # Open NB deal on a company that is already an active client → probably an upsell
         if not won and not lost:
-            active = [c['name'] for c in companies or [] if (c.get('company_activity_status') or '').lower() == 'active']
-            if active:
-                flags.append(flag('nb_active_client', f'{", ".join(active)} is already an active client: if this replaces their contract it belongs in Renewals & upsells'))
+            live = [c for c in other_contracts if c['live']]
+            if live:
+                flags.append(flag('nb_active_client',
+                                  f'The company already has a live contract ("{live[0]["name"]}", {live[0]["stage"]}): '
+                                  'if this deal adds to or replaces it, it belongs in Renewals & upsells'))
 
         if lost and not (p.get('closed_lost_reason') or p.get('closed_lost_reason___category')):
             flags.append(flag('nb_lost_reason'))
@@ -544,7 +554,15 @@ def my_deals():
     deal_deals = batch_associations(s, 'deals', 'deals', link_ids, dd_err)
 
     company_ids = {a['id'] for lst in deal_companies.values() for a in lst}
-    companies = batch_read(s, 'companies', company_ids, ['name', 'company_activity_status'], co_err)
+    companies = batch_read(s, 'companies', company_ids, ['name'], co_err)
+
+    # Other signed contracts of the companies behind new business deals (to spot upsells created as new business)
+    nb_company_ids = sorted({a['id'] for d in raw if d['properties'].get('pipeline') == NB_PIPELINE
+                             for a in deal_companies.get(str(d['id']), [])})
+    company_deals = batch_associations(s, 'companies', 'deals', nb_company_ids, co_err) if nb_company_ids else {}
+    signed_stages = NB_WON | REN_WON | EXPIRED_STAGES
+    other_ids = {a['id'] for lst in company_deals.values() for a in lst}
+    other_deals = batch_read(s, 'deals', other_ids, ['dealname', 'dealstage', 'closedate'], co_err) if other_ids else {}
     li_ids = {a['id'] for lst in deal_line_items.values() for a in lst}
     line_items = batch_read(s, 'line_items', li_ids, ['name', 'recurringbillingfrequency', 'hs_recurring_billing_period'], li_err)
 
@@ -566,7 +584,20 @@ def my_deals():
         cos = None if co_err else [{'id': a['id'], **companies.get(a['id'], {})} for a in deal_companies.get(did, [])]
         lis = None if li_err else [line_items[a['id']] for a in deal_line_items.get(did, []) if a['id'] in line_items]
         has_parent = None if dd_err else any(PARENT_LABEL_WORD in l for a in deal_deals.get(did, []) for l in a['labels'])
-        flags = check_deal(p, cos, lis, has_parent)
+        others, seen = [], set()
+        for co in deal_companies.get(did, []):
+            for a in company_deals.get(co['id'], []):
+                od = other_deals.get(a['id'], {})
+                if a['id'] == did or a['id'] in seen or od.get('dealstage') not in signed_stages:
+                    continue
+                seen.add(a['id'])
+                others.append({'name': (od.get('dealname') or '').strip(), 'closedate': od.get('closedate') or '',
+                               'stage': stage_labels.get(od.get('dealstage'), od.get('dealstage')),
+                               'live': od.get('dealstage') not in EXPIRED_STAGES})
+        # Live contracts first, most recent first
+        others.sort(key=lambda c: c['closedate'], reverse=True)
+        others.sort(key=lambda c: not c['live'])
+        flags = check_deal(p, cos, lis, has_parent, others)
         results.append({
             'id': did,
             'name': p.get('dealname') or '(no name)',
