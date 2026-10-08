@@ -345,8 +345,6 @@ CHECKS = [
     # Lost deals
     {'id': 'nb_lost_reason', 'scope': 'Lost deals · New business', 'severity': 'error', 'section': 'Close lost or disqualify',
      'title': 'Lost without a lost reason', 'why': 'We need to know why we lose.'},
-    {'id': 'ren_lost_reason', 'scope': 'Lost deals · Renewals & upsells', 'severity': 'error', 'section': 'Close lost or disqualify',
-     'title': 'Churned or lost without a reason', 'why': 'We need to know why clients leave.'},
 ]
 CHECKS_BY_ID = {c['id']: c for c in CHECKS}
 
@@ -415,8 +413,6 @@ def check_deal(p, companies, line_items, has_parent_deal):
             if 'new deal' in name.lower():
                 flags.append(flag('ren_new_deal_name'))
             flags += check_won_common(p, line_items, has_parent_deal)
-        if lost and not (p.get('closed_lost_reason') or p.get('closed_lost_reason___category')):
-            flags.append(flag('ren_lost_reason'))
 
     return flags
 
