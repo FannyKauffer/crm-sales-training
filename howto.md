@@ -250,7 +250,10 @@ Always add a **note** with context (e.g. "Less than 100 cars on lot").
 @video https://www.loom.com/share/766ec4c162c844509a73288d56a1870d
 
 1. Create the deal in **CarCutter - Renewals & upsells** (never New business).
-2. Set **Renewal type** yourself: Renewal - upsell / Renewal - downsell / Contract amendment… (no automation sets it).
+2. Set **Renewal type** yourself (no automation sets it):
+   - **Renewal - upsell**: the contract grows (more products, more locations, more value).
+   - **Renewal - downsell**: the contract shrinks.
+   - **Contract amendment**: the contract changes without being an upsell or downsell (e.g. rooftop contracts merged into a group agreement, a legal entity or contract name change, a change of terms). It still cancels and replaces the old contract.
 3. Quote with **all line items of the new contract** (existing products + new ones), not only what's added.
 4. Link the deals: open the **original deal** → **More → Edit association labels → Parent deal → Update**. The original is the parent, the new deal the child.
    - **A child usually has one parent**: Year 1 is Year 2's parent, Year 2 is Year 3's parent.
@@ -279,7 +282,7 @@ When the upsell is won, HubSpot automatically stops the old contract (old deal �
 1. New deal in **CarCutter - New business** on the **new location's company**.
 2. Number of dealerships involved in this deal = **1**.
 3. Normal flow: quote, Closed won, handover.
-4. It doesn't replace anything: **don't** label it as a Child of the group's deal.
+4. It doesn't replace anything: **don't link** it to the group's existing deal. Several contracts can live together for different sub-companies.
 
 **Case B — the location joins the existing contract** (the HQ pays for everyone)
 1. It replaces the current contract → follow *Create an upsell* (Renewals & upsells, renewal type **Renewal - upsell**, **Parent deal** link).
