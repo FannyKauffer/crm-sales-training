@@ -328,6 +328,39 @@ Look at two properties on the company:
 2. Run **My deals** in this app: each issue links to the how-to that fixes it.
 3. Fix your deals directly in HubSpot (each deal in My deals has a ↗ HubSpot link).
 
+## 🛠️ Create a sequence
+
+> Build your own outreach cadence: automated emails and call / email / LinkedIn task reminders.
+
+**1. Create it**
+1. **Automation → Sequences** → **Create sequence** (top right).
+2. **Start from scratch** or pick a template → **Create sequence**.
+3. Click the ✏️ pencil to give it a clear **name**.
+
+**2. Add the steps** (➕ between steps)
+
+| Step | What it does |
+|---|---|
+| **Automated email** | Sent automatically: new thread or reply to the previous email. Use an existing template or create one |
+| **Manual email task** | Reminder to send the email yourself (add a template so it's pre-filled) |
+| **Call task** | Reminder to call the contact |
+| **General task** | Reminder for any other action |
+| **LinkedIn InMail / Connection request task** | Reminder to reach out on Sales Navigator |
+
+- Set the **delay** (in business days) before each step.
+- On a task, tick ✅ **pause the sequence until the task is completed** if the next email depends on it.
+- Max **10 email templates** per sequence (unlimited tasks).
+
+**3. Check the settings** (*Settings* tab)
+- Emails go out on **business days only** by default, within your **automated email send window**.
+- Turn on **email reminders** if you want a notification each time a task is created.
+
+**4. Check the automation** (*Automation* tab)
+- Contacts are **unenrolled automatically** when they reply or book a meeting.
+- Optional: unenroll **all contacts at the same company** as soon as one replies.
+
+**5. Share and save**: choose who can use it (*Only me* by default, or your team) → **Save**.
+
 ## ✉️ Enroll leads in a sequence
 
 > Put prospects into an automated outreach cadence.
