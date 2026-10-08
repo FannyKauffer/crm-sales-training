@@ -29,13 +29,13 @@ New / attempting → **Contacted** (set automatically when you log an outreach) 
 
 ⚠️ Fill the mandatory fields **when you move the deal**, not at the end. HubSpot blocks the stage change if they are missing.
 
-## 👥 Your role as a US Account Executive
+## 👥 Your role as an Account Executive
 
 > You run the full cycle yourself, from first call to signature. There is no BDR behind you.
 
 | Who | Does | Owns in HubSpot |
 |---|---|---|
-| **You (AE US)** | Prospecting, qualification, demo, negotiation, closing | Leads, companies & contacts (incl. qualification info), parent/child structure, deals, quotes, Top 100 accounts clean |
+| **You (AE)** | Prospecting, qualification, demo, negotiation, closing | Leads, companies & contacts (incl. qualification info), parent/child structure, deals, quotes, Top 100 accounts clean |
 | **CSM** | Onboarding after Closed won, retention, renewals | Data quality after signature, renewals |
 | **Sales Ops** | Imports and data monitoring | Slack **#cc-import-requests** |
 
