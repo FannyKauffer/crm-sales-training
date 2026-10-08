@@ -274,9 +274,13 @@ When the upsell is won, HubSpot automatically stops the old contract (old deal �
 
 ## 📍 Add a location to a contract
 
-> Two cases depending on who pays for the new location.
+> Two cases: a separate contract for the location, or a centralized contract that gets replaced.
 
 **First: create the location** as a child company of the HQ (see *Add the locations of a group*).
+
+**Ask yourself: does the new location join a centralized contract?**
+- **No** → separate contract, **no link** (case A).
+- **Yes** → the central contract is **replaced** → upsell with **Parent/Child link** (case B, e.g. Ed Napleton).
 
 **Case A — the new location gets its own contract** (it pays separately, nothing is replaced)
 1. New deal in **CarCutter - New business** on the **new location's company**.
@@ -284,8 +288,8 @@ When the upsell is won, HubSpot automatically stops the old contract (old deal �
 3. Normal flow: quote, Closed won, handover.
 4. It doesn't replace anything: **don't link** it to the group's existing deal. Several contracts can live together for different sub-companies.
 
-**Case B — the location joins the existing contract** (the HQ pays for everyone)
-1. It replaces the current contract → follow *Create an upsell* (Renewals & upsells, renewal type **Renewal - upsell**, **Parent deal** link).
+**Case B — the location joins the centralized contract** (the HQ pays for everyone, e.g. Ed Napleton)
+1. The central contract is **replaced** → follow *Create an upsell* (Renewals & upsells, renewal type **Renewal - upsell**, the current central deal labelled **Parent deal**).
 2. The quote covers **all locations**, including the new one.
 3. Update **Number of dealerships involved in this deal** to the new total and set **is multi-location deal? = Yes**.
 4. Associate the deal with the HQ **and every location** covered, including the new one.

@@ -211,6 +211,7 @@ Each stage has mandatory fields (gates). Fill them when you move the deal, not a
    - **Renewal - downsell**: the contract shrinks.
    - **Contract amendment**: the contract changes without being an upsell or downsell (e.g. rooftop contracts merged into a group agreement, a legal entity or contract name change, a change of terms). It still cancels and replaces the old contract.
    - New locations under a separate contract that does not replace the previous one: **don't link** the deals. Several contracts can live together for different sub-companies.
+   - But a location **added to a centralized contract** replaces that contract: it's an upsell, linked as Child (e.g. Ed Napleton).
 3. The new deal must contain the **full updated contract** (existing + new line items), not only the added product.
 4. Associate old and new deals: on the **original deal** → More → Edit association labels → **Parent deal**. The new deal is the child. Year 1 is parent of Year 2, Year 2 of Year 3. A child usually has one parent; exception: several rooftop deals merged into one centralized deal are all Parents of the central deal.
 5. On the original deal: Actions → **Revoke auto-renew = Yes** with reason **Upsold**, **Downsold** or **Contract amendment**. Skipping this can bill the client twice.
