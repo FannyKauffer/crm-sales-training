@@ -163,7 +163,7 @@ Contact: **Job title in English** and **Buying role** (several if needed).
 > Line items drive the deal amount, the ARR, your signings and your bonus.
 
 1. In the deal → **Create quote** → **Add line item → Select from product library**.
-2. Pick the right **folder**, **language** and **tier** (use the **Americas pricing grid**).
+2. Pick the right **folder**, **language** and **tier** (use **your pricing tool**).
 3. On each line item:
    - Discount → **Unit discount** (never edit the unit price)
    - **Term** = contract duration in months
