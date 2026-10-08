@@ -305,16 +305,12 @@ CHECKS = [
      'title': 'More dealerships in the deal than in the group', 'why': 'A deal cannot cover more locations than the group has: one of the two numbers is wrong.'},
     {'id': 'nb_products', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': '"[Cars] Products" is empty', 'why': 'Say what is being sold: App, API, 360…'},
-    {'id': 'nb_legal_name', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
-     'title': '"[CC] Company legal name" is empty', 'why': 'Printed on the invoice.'},
     {'id': 'nb_no_company', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No company associated to the deal', 'why': 'Every deal must be linked to its company (and to every location it covers).'},
     {'id': 'nb_no_contact', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No contact associated to the deal', 'why': 'Every deal must be linked to a contact.'},
     {'id': 'nb_no_showroom', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'No showroom line item (Closed won / Onboarding)', 'why': 'Every new business contract needs a showroom line item so onboarding can set it up. Set-up fees only deals are not checked.'},
-    {'id': 'nb_won_dms', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Close a deal as won',
-     'title': 'DMS is empty', 'why': 'The CSM needs the DMS for the technical integration.'},
     # Renewals & upsells — signed deals
     {'id': 'ren_type', 'scope': 'Signed deals · Renewals & upsells', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
      'title': '"Renewal type" is empty', 'why': 'Upsell, downsell, amendment… drives how the contract is replaced.'},
@@ -323,8 +319,6 @@ CHECKS = [
     {'id': 'ren_new_deal_name', 'scope': 'Signed deals · Renewals & upsells', 'severity': 'warning', 'section': 'Create an upsell, downsell or amendment',
      'title': 'Named "New Deal" but in Renewals & upsells', 'why': 'Check it really replaces an existing contract and is not new business.'},
     # Both pipelines — signed deals
-    {'id': 'won_dms_other', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
-     'title': 'DMS set to "Other"', 'why': 'Be specific: the CSM needs the real DMS.'},
     {'id': 'won_no_line_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
      'title': 'No line items', 'why': 'No line items = no ARR and no subscription.'},
     {'id': 'won_one_time', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
@@ -379,14 +373,10 @@ def check_deal(p, companies, line_items, has_parent_deal):
                 flags.append(flag('nb_deal_gt_group', f'{in_deal} dealerships in the deal but only {total} in the group'))
             if not p.get('cars__product'):
                 flags.append(flag('nb_products'))
-            if not p.get('company_legal_name'):
-                flags.append(flag('nb_legal_name'))
             if companies == []:
                 flags.append(flag('nb_no_company'))
             if to_int(p.get('num_associated_contacts')) in (None, 0):
                 flags.append(flag('nb_no_contact'))
-            if not (p.get('dms_ims_multiple_checkboxes') or ''):
-                flags.append(flag('nb_won_dms'))
             setup_only = (p.get('setup_fees_only_no_recurring') or '').lower() == 'true'
             if stage in (NB_CLOSED_WON, NB_ONBOARDING) and not setup_only and line_items is not None \
                     and not any('showroom' in (li.get('name') or '').lower() for li in line_items):
@@ -446,9 +436,6 @@ def check_won_common(p, line_items, has_parent_deal=None):
         if wrong:
             flags.append(flag('won_setup_only_items',
                               f'"Set-up fees only" deal with other line items: {", ".join(wrong[:3])}'))
-    dms = (p.get('dms_ims_multiple_checkboxes') or '').split(';')
-    if 'Other' in dms:
-        flags.append(flag('won_dms_other'))
 
     # Line item count is stored on the deal itself: reliable even when line items can't be read
     count = to_int(p.get('hs_num_of_associated_line_items'))
