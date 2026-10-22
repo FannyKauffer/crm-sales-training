@@ -236,9 +236,26 @@ Before **Closed Won**, these must be filled (no blanks, no defaults):
 
 - Always fill the **Closed lost reason** and its category so we can learn from lost deals.
 
-## Pricing documentation
+## Pricing documentation and offers
 
-Pricing grids (Americas and EU) and pricing slides are linked in the Notion knowledge base, Module 3 § 5. Use them to pick the right tier.
+Source: Notion "CarCutter Pricing & Offers" (https://app.notion.com/p/293ab682c9de8010b771c14e3f7d1d5b).
+
+- **Pricing tools** (always price with them): North America https://carcutter-us-pricing-production.up.railway.app/ · Europe https://carcuttereupricing-production.up.railway.app/
+- Pricing grids (Americas and EU) and pricing slides are also linked in the Notion knowledge base, Module 3 § 5.
+- **Tiers** are based on the number of vehicles: Tier 1 = 0-50, Tier 2 = 50-100, Tier 3 = 100-200, then +100 per tier.
+- **Discount policy**: standard discount 10% off, applicable across all plans. Any other discount: use the pricing tool, which generates all acceptable discounts based on the number of stores in the group and the group's total inventory.
+- **Plans**: Basic (up to 15 images per car, app, overlays, IMS/DMS upload, Hub, Shotlist in NorthAm) · Standard (up to 20 images, + Shotlist, manual Hotspots, Stock images in NorthAm) · Premium (unlimited images, + Next gen 360, Standing inventory feed).
+- **Add-ons**: Next gen 360 (not all showrooms are compatible: only certain floor types, and a turntable is required; check the compatibility guidelines and Ops/Product before selling) · Shotlist.
+- **Set-up / one-off fees** (same price in EUR, GBP, CAD, USD, AUD): Standard Showroom 99 · Custom Showroom 399 · Tailor-made Showroom 799 (Standard & Premium only) · Integration to Cloud Server 199 · Integration to IMS/DMS 299 · Integration to FTP/SFTP 199 · Training 150 (optional) · CarCutter Hub set-up 199 (optional).
+- **US SMB Tier 1 set-up fees cannot be waived**: onboarding won't start and ARR won't be recognized until they are paid.
+- **Quote templates** exist per language and contract duration (pattern `CARS - LANGUAGE - BILLING TYPE - DURATION`); picking the right duration puts the right T&Cs on the contract. In the US, Custom templates (with a comment box) go through manager approval; Standard ones don't.
+
+### US offer: 1 or 3 months free on a 12-month contract
+
+- **US strat accounts only.** 3 months free requires **manager approval**.
+- The client gets 1 or 3 months free, then pays for 12 months (13 or 15 months in total).
+- How: select the **12-month contract** quote template, add the subscription for 12 months as usual, then add the line item **CarCutter - 1 month free** (SKU CC1MONTHOFFER) or **CarCutter - 3 months free** (SKU CC3MONTHSOFFER), both at $0.
+- The free months are not part of ARR.
 
 ## Engagement models and contract durations
 

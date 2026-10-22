@@ -1,3 +1,85 @@
+# Start here
+
+## 💰 Build your offer and quote
+
+> What to sell, at what price, for how long, and how to put it in the quote.
+
+> 🛑 **Price with the pricing tool, never by hand.** It gives the right tier and every discount you're allowed to give.
+
+### ✅ 1. Get the price
+
+| Region | Pricing tool |
+|---|---|
+| **North America** (US, Canada) | **[NorthAm pricing tool](https://carcutter-us-pricing-production.up.railway.app/)** |
+| **Europe** | **[EU pricing tool](https://carcuttereupricing-production.up.railway.app/)** |
+
+- Tier = number of vehicles (0-50, 50-100, 100-200…).
+- Standard discount: **10%**, on every plan. Anything else: only what the tool proposes (based on number of stores and group inventory).
+- All price lists, add-ons and set-up fees: **[CarCutter Pricing & Offers](https://app.notion.com/p/293ab682c9de8010b771c14e3f7d1d5b)** (Notion).
+
+### 🔀 2. Pick the plan
+
+| Plan | Images per car | Adds |
+|---|---|---|
+| **Basic** | 15 | App · overlays · IMS/DMS upload · Hub · Shotlist (NorthAm) |
+| **Standard** | 20 | + Shotlist · Hotspots · Stock images (NorthAm) |
+| **Premium** | Unlimited | + Next gen 360 · Standing inventory feed |
+
+**Add-ons**: Next gen 360 · Shotlist.
+**One-off fees** (billed once): showroom Standard 99 · Custom 399 · Tailor-made 799 (Standard & Premium only) · Integration IMS/DMS 299 · FTP or Cloud 199 · Training 150 and Hub set-up 199 (optional).
+
+### 🔀 3. Pick the duration
+
+| Model | When |
+|---|---|
+| **12-month commit** | Default |
+| **12 months + 1 or 3 months free** | US strat accounts only (see step 5) |
+| **1- or 3-month pilot + 12 months** | Client wants to try first: see *Sell a pilot* |
+| **3 months, auto-renew** | Won't commit to 12 months |
+| **6 months** | US only |
+| **Multi-year (≥ 18 months)** | Big accounts: **+20% ARR** for your bonus |
+| **1 month, auto-renew** | Last resort |
+
+### ✅ 4. Build the quote
+
+1. Pick the quote **template** matching the duration (it sets the right T&Cs).
+2. **Add line item → Product library** → your folder and language → the tier from the tool.
+3. Discount in **Unit discount** · **Term** = contract duration (months).
+4. Commitment and billing:
+
+| Contract | Commitment type | Billing frequency |
+|---|---|---|
+| Flat monthly fee | **Flat rate monthly** | Monthly |
+| API · price per car · per image | **Minimum commitment** | **Annually** |
+| Upfront payment | **Credit pack** | Annually |
+| No commitment | **PayG**: VP approval only | |
+
+5. New business: **always add a showroom**.
+6. HQ pays for all → **one quote** on the HQ. Each location pays → one deal + quote per location.
+
+### ⭐ 5. US offer: 1 or 3 months free
+
+- **Who**: **US strat accounts only**. **3 months free = manager approval** before sending.
+- **What**: the client gets 1 or 3 months free, then pays 12 months (13 or 15 months in total).
+- **How**:
+  1. Pick the **12-month contract** template.
+  2. Add the subscription for 12 months as usual.
+  3. Add the line item **CarCutter - 1 month free** or **CarCutter - 3 months free** ($0).
+
+### 💡 What counts in your ARR
+
+- Recurring line items only. One-off fees and free months: no ARR.
+- 12 months: full ARR · ≥ 18 months: ARR + 20% · pilot: only if it succeeds.
+- 3 months: first 3 months + actuals of the next 9 · 1 month: first month + actuals of the next 11.
+
+### ❌ Never
+
+- Bill a subscription **"One-time"**: no ARR, no signing, no bonus.
+- Edit the unit price, or give a discount the tool doesn't propose.
+- Waive set-up fees for **US SMB Tier 1**: onboarding won't start.
+- Sell Next gen 360 without checking the showroom: a **turntable** and a compatible floor are required.
+- Offer free months outside US strat accounts, or 3 months without manager approval.
+
 # Understand
 
 ## 🧭 Understand the sales pipeline
@@ -161,35 +243,6 @@ Not 4 yes → close it early.
 
 - Write internal notes in *Meeting description*: the prospect sees it. Use **Team notes**.
 
-## 🗓️ Pick the engagement model and duration
-
-> 12-month commit by default. Everything else is an exception.
-
-### 🔀 Which model?
-
-| Model | When |
-|---|---|
-| **12-month commit** | Default |
-| **1- or 3-month pilot + 12-month commit** | The client wants to try first (see *Sell a pilot*) |
-| **3-month with auto-renew** | Client won't commit to 12 months |
-| **6-month contract** | US only |
-| **Multi-year (≥ 18 months)** | Big accounts: +20% ARR for your bonus |
-| **1-month with auto-renew** | Last resort, exceptional |
-
-### 💡 What counts in your ARR
-
-| Contract | ARR recognized |
-|---|---|
-| 12 months | Full ARR |
-| ≥ 18 months | ARR + 20% (bonus) |
-| Pilot + 12 months | ARR **only if the pilot succeeds**, pilot months excluded |
-| 3 months | First 3 months at signature + actuals of the next 9 |
-| 1 month | First month at signature + actuals of the next 11 |
-
-### ❌ Never
-
-- A pilot on a month-to-month contract.
-
 ## 🧪 Sell a pilot
 
 > A pilot = a paid first period, then a 12-month commit. Not a free trial.
@@ -209,38 +262,6 @@ Not 4 yes → close it early.
 
 - Call it a pilot if there's no 12-month contract after it.
 - Forget to set Success or Exit after the pilot: your ARR depends on it.
-
-## 🧾 Build the quote and line items
-
-> Line items = your ARR, your signings, your bonus.
-
-> 🛑 **Never bill a subscription "One-time"**: no ARR, no signing, no bonus.
-
-### ✅ Do
-
-1. Quote → **Add line item → Product library** → right folder, language and tier (**pricing tool**).
-2. Discount in **Unit discount** · **Term** = contract duration (months).
-3. Pick the commitment:
-
-| Contract | Commitment type | Billing frequency |
-|---|---|---|
-| API · price per car · price per image | **Minimum commitment** | **Annually** |
-| Upfront payment | **Credit pack** | Annually |
-| Flat monthly fee | **Flat rate monthly** | Monthly |
-| No commitment | **PayG**: VP approval only | |
-
-4. New business: **always add a showroom**.
-5. HQ pays for all → **one quote** on the HQ. Each location pays → one deal + quote per location.
-
-### 💡 Good to know
-
-- Minimum commitment is billed monthly by Finance: add a comment to the buyer.
-- **Set-up fees only** = Yes only if the deal has nothing but showroom, integration or inventory reprocessing. No subscription, no renewal.
-
-### ❌ Never
-
-- Edit the unit price.
-- Use Flat rate annually.
 
 # Close
 

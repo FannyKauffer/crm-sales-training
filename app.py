@@ -309,7 +309,7 @@ CHECKS = [
      'title': 'No contact associated to the deal', 'why': 'Every deal must be linked to a contact.'},
     {'id': 'nb_won_dms', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Close a deal as won',
      'title': 'DMS is empty', 'why': 'The CSM needs the DMS for the technical integration.'},
-    {'id': 'nb_no_showroom', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'nb_no_showroom', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Build your offer and quote',
      'title': 'No showroom line item (Closed won / Onboarding)', 'why': 'Every new business contract needs a showroom line item so onboarding can set it up. If the company already has a contract, this deal is probably an upsell or renewal and belongs in Renewals & upsells. Set-up fees only deals are not checked.'},
     # Renewals & upsells — signed deals
     {'id': 'ren_type', 'scope': 'Signed deals · Renewals & upsells', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
@@ -321,19 +321,19 @@ CHECKS = [
     # Both pipelines — signed deals
     {'id': 'won_dms_other', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Close a deal as won',
      'title': 'DMS set to "Other"', 'why': 'Be specific: the CSM needs the real DMS.'},
-    {'id': 'won_no_line_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'won_no_line_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build your offer and quote',
      'title': 'No line items', 'why': 'No line items = no ARR and no subscription.'},
-    {'id': 'won_one_time', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'won_one_time', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build your offer and quote',
      'title': 'Line item billed "One-time" (set-up fees excluded)', 'why': 'Flagged on API deals, or when every line item is one-time. Not counted as recurring revenue, so not in signings or bonus.'},
-    {'id': 'won_no_term', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Build the quote and line items',
+    {'id': 'won_no_term', 'scope': 'Signed deals · Both pipelines', 'severity': 'warning', 'section': 'Build your offer and quote',
      'title': 'Recurring line item without a Term', 'why': 'Term = contract duration in months.'},
     {'id': 'won_duration', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Close a deal as won',
      'title': '"Contract duration (in months)" is empty', 'why': 'Filled automatically by the Data team within 2 hours of signature (checked after 24h). Fill it yourself for multi-duration contracts. No duration = no end date = no renewal deal. Not required on set-up fees only deals.'},
-    {'id': 'won_setup_only_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'won_setup_only_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build your offer and quote',
      'title': '"Set-up fees only" deal with other line items', 'why': 'A set-up fees only deal may only contain showroom, integration or inventory processing fees, no subscription, flat fee or API.'},
     {'id': 'won_setup_only_child', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
      'title': '"Set-up fees only" deal labelled as a Child deal', 'why': 'A child cancels and replaces its parent. A set-up fee or add-on deal must only be associated to the existing deal, without the Parent/Child label.'},
-    {'id': 'won_amount', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build the quote and line items',
+    {'id': 'won_amount', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build your offer and quote',
      'title': 'Deal amount is empty or 0', 'why': 'The amount comes from the recurring line items.'},
     # Open deals
     {'id': 'nb_active_client', 'scope': 'Open deals · New business', 'severity': 'warning', 'section': 'Create an upsell, downsell or amendment',
@@ -419,6 +419,13 @@ def check_deal(p, companies, line_items, has_parent_deal, other_contracts=None):
     return flags
 
 
+def is_one_off_item(name):
+    """Line items that are legitimately billed once (never part of ARR)."""
+    n = (name or '').lower()
+    return ('setup' in n.replace('-', '').replace(' ', '') or 'free' in n
+            or any(k in n for k in SETUP_ONLY_KEYWORDS))
+
+
 def closed_hours_ago(p):
     """Hours since closedate (HubSpot ISO string or epoch ms), None if unknown."""
     v = p.get('closedate')
@@ -458,8 +465,9 @@ def check_won_common(p, line_items, has_parent_deal=None):
         flags.append(flag('won_no_line_items'))
     if line_items and not setup_only:
         is_api = 'API' in (p.get('cars__product') or '').split(';')
+        # One-off by nature: set-up fees, showroom / integration / inventory processing, free-month offers
         one_time = [li for li in line_items
-                    if not li.get('recurringbillingfrequency') and 'setup' not in (li.get('name') or '').lower().replace('-', '').replace(' ', '')]
+                    if not li.get('recurringbillingfrequency') and not is_one_off_item(li.get('name'))]
         if one_time and (is_api or len(one_time) == len(line_items)):
             names = ', '.join((li.get('name') or '?') for li in one_time[:3])
             flags.append(flag('won_one_time', f'Line item billed "One-time" ({names}): not counted as recurring revenue, so not in your signings or bonus'))
