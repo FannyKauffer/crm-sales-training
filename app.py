@@ -643,7 +643,7 @@ _claude = None
 
 def anthropic_key():
     """ANTHROPIC_API_KEY without stray spaces / quotes from copy-paste; '' if missing or still the example value."""
-    key = (os.environ.get('ANTHROPIC_API_KEY') or '').strip().strip('"'').strip()
+    key = (os.environ.get('ANTHROPIC_API_KEY') or '').strip().strip('"\'').strip()
     return '' if key.startswith('your_') else key
 
 
