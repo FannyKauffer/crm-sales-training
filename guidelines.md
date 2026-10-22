@@ -240,6 +240,45 @@ Before **Closed Won**, these must be filled (no blanks, no defaults):
 
 Pricing grids (Americas and EU) and pricing slides are linked in the Notion knowledge base, Module 3 § 5. Use them to pick the right tier.
 
+## Engagement models and contract durations
+
+Source: Notion "Engagement models" (CarCutter Sales Playbook). Our engagement models:
+
+1. 12-month commit (default)
+2. 1-month pilot + 12-month commit contract
+3. 3-month pilot + 12-month commit contract
+4. 1-month with auto-renew (last resort, should be exceptional)
+5. 3-month with auto-renew
+6. 6-month contract (US)
+7. Multi-year contract (≥ 18 months)
+
+We do **not** accept pilots for month-over-month contracts.
+
+**ARR recognition by commitment** (as of Q2 2024):
+
+| Commitment | ARR recognition |
+|---|---|
+| 12-month contract | ARR |
+| 1-month pilot then 12-month contract | If the pilot is successful, ARR is recognized excluding the pilot's MRR. If unsuccessful, nothing is recognized. |
+| 3-month pilot then 12-month contract | If the pilot is successful, ARR is recognized excluding 3× the pilot's MRR. If unsuccessful, nothing is recognized. |
+| 1-month contract | MRR of the first month at signature, plus the actuals of the next 11 months |
+| 3-month contract | MRR of the first 3 months at signature, plus the actuals of the next 9 months |
+| > 12 months (18, 24, 48 months) | ARR + 20% multiplier (for bonuses) |
+
+## Pilots
+
+Source: Notion "Pilots" (CarCutter Sales Playbook).
+
+- A pilot is a **paid** first period (1 or 3 months), potentially at a lower price, that must convert into **at least a 12-month commit contract**. It is not a trial or a test: the client is onboarded and billed.
+- A pilot contract contains the pilot period **followed by** the actual contract, as 2 line items. E.g. 1 month at $349, then 12 months at $449 (or the same price for both).
+- If the contract doesn't look like this, it's not a pilot: create a standard 1- or 3-month contract.
+- In HubSpot: set **Has a pilot? = Yes** (at deal creation, or at the Negotiation/trade stage at the latest), **Pilot monthly amount**, **Pilot duration in months**, **Pilot status = In pipeline or negotiation**.
+- Pilot status values: *In pipeline or negotiation* (not signed) → *In progress* (signed, set automatically when the quote is signed) → *Success* (the client goes on with the 12-month contract) or *Exit* (the client stops: token deactivated, deal moves to Closed lost).
+- 1 or 3 months later, the AE must come back to the deal and set **Success** or **Exit**.
+- If the whole deal is a pilot, its ARR is 0.
+- After a pilot: more locations joining into a group agreement → Renewals & upsells pipeline; simply adding extra locations → New business.
+- Optional comment to the buyer: "A xx-month pilot period begins on the contract signing date. If the client notifies their intention to withdraw before the end of this period, the contract will be voided. However, the monthly subscription fee for the pilot month remains due. If no cancellation is received within this period, the contract will be automatically validated, and the client will be committed for a xx-month term. Integration fees are due in all cases."
+
 ---
 
 # Module 4: Tools & reporting

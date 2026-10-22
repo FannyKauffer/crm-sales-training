@@ -161,6 +161,55 @@ Not 4 yes → close it early.
 
 - Write internal notes in *Meeting description*: the prospect sees it. Use **Team notes**.
 
+## 🗓️ Pick the engagement model and duration
+
+> 12-month commit by default. Everything else is an exception.
+
+### 🔀 Which model?
+
+| Model | When |
+|---|---|
+| **12-month commit** | Default |
+| **1- or 3-month pilot + 12-month commit** | The client wants to try first (see *Sell a pilot*) |
+| **3-month with auto-renew** | Client won't commit to 12 months |
+| **6-month contract** | US only |
+| **Multi-year (≥ 18 months)** | Big accounts: +20% ARR for your bonus |
+| **1-month with auto-renew** | Last resort, exceptional |
+
+### 💡 What counts in your ARR
+
+| Contract | ARR recognized |
+|---|---|
+| 12 months | Full ARR |
+| ≥ 18 months | ARR + 20% (bonus) |
+| Pilot + 12 months | ARR **only if the pilot succeeds**, pilot months excluded |
+| 3 months | First 3 months at signature + actuals of the next 9 |
+| 1 month | First month at signature + actuals of the next 11 |
+
+### ❌ Never
+
+- A pilot on a month-to-month contract.
+
+## 🧪 Sell a pilot
+
+> A pilot = a paid first period, then a 12-month commit. Not a free trial.
+
+### ✅ Do
+
+1. Quote with **2 lines**: the pilot (e.g. 1 month at $299) + the contract (e.g. 12 months at $399).
+2. On the deal: **Has a pilot? = Yes** · **Pilot monthly amount** · **Pilot duration in months** · **Pilot status = In pipeline or Negotiation**.
+3. At the end of the pilot, come back to the deal: **Pilot status = Success** (goes on) or **Exit** (stops: token deactivated, deal Closed lost).
+
+### 💡 Good to know
+
+- Pilot only = 1 or 3 months **followed by at least 12 months**. Otherwise create a standard 1- or 3-month contract.
+- Optional comment to the buyer: the pilot fee is due even if they withdraw; without cancellation, the commitment starts automatically. Integration fees are always due.
+
+### ❌ Never
+
+- Call it a pilot if there's no 12-month contract after it.
+- Forget to set Success or Exit after the pilot: your ARR depends on it.
+
 ## 🧾 Build the quote and line items
 
 > Line items = your ARR, your signings, your bonus.
