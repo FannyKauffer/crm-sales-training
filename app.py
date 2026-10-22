@@ -475,7 +475,7 @@ def check_won_common(p, line_items, has_parent_deal=None):
 @app.route('/api/guide')
 @api_login_required
 def guide():
-    return jsonify({'howto': HOWTO_MD, 'markdown': GUIDE_MD, 'qa_enabled': bool(os.environ.get('ANTHROPIC_API_KEY'))})
+    return jsonify({'howto': HOWTO_MD, 'markdown': GUIDE_MD, 'qa_enabled': bool(anthropic_key())})
 
 
 @app.route('/api/checks')
@@ -641,18 +641,24 @@ Style: short and practical, like a helpful colleague. Give the exact steps or fi
 _claude = None
 
 
+def anthropic_key():
+    """ANTHROPIC_API_KEY without stray spaces / quotes from copy-paste; '' if missing or still the example value."""
+    key = (os.environ.get('ANTHROPIC_API_KEY') or '').strip().strip('"'').strip()
+    return '' if key.startswith('your_') else key
+
+
 def claude_client():
     global _claude
     if _claude is None:
-        _claude = anthropic.Anthropic()
+        _claude = anthropic.Anthropic(api_key=anthropic_key())
     return _claude
 
 
 @app.route('/api/ask', methods=['POST'])
 @api_login_required
 def ask():
-    if not os.environ.get('ANTHROPIC_API_KEY'):
-        return jsonify({'error': 'ANTHROPIC_API_KEY not set'}), 500
+    if not anthropic_key():
+        return jsonify({'error': 'ANTHROPIC_API_KEY is not set (or still has the example value) in Railway.'}), 500
     body = request.get_json(silent=True) or {}
     question = (body.get('question') or '').strip()[:2000]
     if not question:
@@ -676,6 +682,9 @@ def ask():
             system=[{'type': 'text', 'text': QA_SYSTEM, 'cache_control': {'type': 'ephemeral'}}],
             messages=history + [{'role': 'user', 'content': question}],
         )
+    except anthropic.AuthenticationError:
+        return jsonify({'error': 'The Claude API key was refused (401). In Railway, check that ANTHROPIC_API_KEY holds the full key '
+                                 'from console.anthropic.com (it starts with sk-ant-api), with no spaces or quotes.'}), 502
     except anthropic.RateLimitError:
         return jsonify({'error': 'Too many questions right now, try again in a minute.'}), 429
     except anthropic.APIStatusError as e:
