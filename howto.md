@@ -10,7 +10,8 @@
 
 | Region | Pricing tool |
 |---|---|
-| **North America** (US, Canada) | **[NorthAm pricing tool](https://carcutter-us-pricing-production.up.railway.app/)** |
+| **United States** | **[NorthAm pricing tool](https://carcutter-us-pricing-production.up.railway.app/)** |
+| **Australia · Canada** | **[AU-CA pricing tool](https://aucanpricing-production.up.railway.app/)** |
 | **Europe** | **[EU pricing tool](https://carcuttereupricing-production.up.railway.app/)** |
 
 - Tier = number of vehicles (0-50, 50-100, 100-200…).
@@ -59,12 +60,13 @@
 
 ### ⭐ 5. US offer: 1 or 3 months free
 
-- **Who**: **US strat accounts only**. **3 months free = manager approval** before sending.
+- **Who**: **US strat accounts only**. Offering 3 months? **Talk to your manager first.**
 - **What**: the client gets 1 or 3 months free, then pays 12 months (13 or 15 months in total).
 - **How**:
-  1. Pick the **12-month contract** template.
+  1. Pick the **12-month contract** template (standard).
   2. Add the subscription for 12 months as usual.
   3. Add the line item **CarCutter - 1 month free** or **CarCutter - 3 months free** ($0).
+- **Nothing else to do**: billing and the subscription start are pushed back by 1 or 3 months automatically.
 
 ### 💡 What counts in your ARR
 
@@ -78,7 +80,7 @@
 - Edit the unit price, or give a discount the tool doesn't propose.
 - Waive set-up fees for **US SMB Tier 1**: onboarding won't start.
 - Sell Next gen 360 without checking the showroom: a **turntable** and a compatible floor are required.
-- Offer free months outside US strat accounts, or 3 months without manager approval.
+- Offer free months outside US strat accounts, or 3 months without telling your manager.
 
 # Understand
 

@@ -240,7 +240,7 @@ Before **Closed Won**, these must be filled (no blanks, no defaults):
 
 Source: Notion "CarCutter Pricing & Offers" (https://app.notion.com/p/293ab682c9de8010b771c14e3f7d1d5b).
 
-- **Pricing tools** (always price with them): North America https://carcutter-us-pricing-production.up.railway.app/ · Europe https://carcuttereupricing-production.up.railway.app/
+- **Pricing tools** (always price with them): United States https://carcutter-us-pricing-production.up.railway.app/ · Australia & Canada https://aucanpricing-production.up.railway.app/ · Europe https://carcuttereupricing-production.up.railway.app/
 - Pricing grids (Americas and EU) and pricing slides are also linked in the Notion knowledge base, Module 3 § 5.
 - **Tiers** are based on the number of vehicles: Tier 1 = 0-50, Tier 2 = 50-100, Tier 3 = 100-200, then +100 per tier.
 - **Discount policy**: standard discount 10% off, applicable across all plans. Any other discount: use the pricing tool, which generates all acceptable discounts based on the number of stores in the group and the group's total inventory.
@@ -252,9 +252,10 @@ Source: Notion "CarCutter Pricing & Offers" (https://app.notion.com/p/293ab682c9
 
 ### US offer: 1 or 3 months free on a 12-month contract
 
-- **US strat accounts only.** 3 months free requires **manager approval**.
+- **US strat accounts only.** Before offering 3 months free, the AE should **talk to their manager** (heads-up; no formal approval workflow, the standard 12-month template is used).
 - The client gets 1 or 3 months free, then pays for 12 months (13 or 15 months in total).
 - How: select the **12-month contract** quote template, add the subscription for 12 months as usual, then add the line item **CarCutter - 1 month free** (SKU CC1MONTHOFFER) or **CarCutter - 3 months free** (SKU CC3MONTHSOFFER), both at $0.
+- A workflow automatically delays billing by 1 or 3 months after onboarding completion, and pushes the subscription start date by 1 or 3 months, when the deal contains these line items. Nothing to do for the AE; contract duration stays 12 months and the renewal is created at the right time.
 - The free months are not part of ARR.
 
 ## Engagement models and contract durations
