@@ -680,12 +680,13 @@ def ask():
     if history and history[0]['role'] != 'user':
         history = history[1:]
 
+    # Haiku has no server-side refusal fallback
+    fallback = {} if 'haiku' in CLAUDE_MODEL else {'betas': ['server-side-fallback-2026-07-01'], 'fallbacks': 'default'}
     try:
         response = claude_client().beta.messages.create(
             model=CLAUDE_MODEL,
             max_tokens=4000,
-            betas=['server-side-fallback-2026-07-01'],
-            fallbacks='default',
+            **fallback,
             output_config={'effort': 'low'},
             system=[{'type': 'text', 'text': QA_SYSTEM, 'cache_control': {'type': 'ephemeral'}}],
             messages=history + [{'role': 'user', 'content': question}],
