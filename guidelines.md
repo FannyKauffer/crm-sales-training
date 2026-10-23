@@ -296,7 +296,7 @@ Source: Notion "Pilots" (CarCutter Sales Playbook).
 - 1 or 3 months later, the AE must come back to the deal and set **Success** or **Exit**.
 - If the whole deal is a pilot, its ARR is 0.
 - After a pilot: more locations joining into a group agreement → Renewals & upsells pipeline; simply adding extra locations → New business.
-- Optional comment to the buyer: "A xx-month pilot period begins on the contract signing date. If the client notifies their intention to withdraw before the end of this period, the contract will be voided. However, the monthly subscription fee for the pilot month remains due. If no cancellation is received within this period, the contract will be automatically validated, and the client will be committed for a xx-month term. Integration fees are due in all cases."
+- Optional comment to the buyer: "A xx-month pilot period begins on the go-live date (subscription start date). If the client notifies their intention to withdraw before the end of this period, the contract will be voided. However, the monthly subscription fee for the pilot month remains due. If no cancellation is received within this period, the contract will be automatically validated, and the client will be committed for a xx-month term. Integration fees are due in all cases."
 
 ---
 
