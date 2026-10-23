@@ -32,6 +32,7 @@
 |---|---|
 | **12-month commit** | Default |
 | **12 months + 1 or 3 months free** | US strat accounts only (see step 5) |
+| **6 months + 1 month free** | US strat accounts only (see step 5) |
 | **1- or 3-month pilot + 12 months** | Client wants to try first: see *Sell a pilot* |
 | **3 months, auto-renew** | US only · won't commit to 12 months |
 | **6 months** | US only |
@@ -55,15 +56,21 @@
    Minimum commitment: the client is **billed every month on actual usage**, with a **minimum commitment for the year**. If they use less than 100% over the year, the unused cars or images are billed.
 5. New business: **always add a showroom**.
 
-### ⭐ 5. US offer: 1 or 3 months free
+### ⭐ 5. US offer: free months
 
 - **Who**: **US strat accounts only**. Offering 3 months? **Talk to your manager first.**
-- **What**: the client gets 1 or 3 months free, then pays 12 months (13 or 15 months in total).
+- **What**:
+
+| Contract | Free | Engagement | Billed | Template · Term |
+|---|---|---|---|---|
+| 12 months | 1 or 3 months | 13 or 15 months | 12 times | 12-month · Term = 12 |
+| 6 months | 1 month | 7 months | 6 times | 6-month · Term = 6 |
+
 - **How**:
-  1. **Use the 12-month template, Term = 12**: the client is engaged for 13 or 15 months but **billed 12 times**.
-  2. Add the subscription for 12 months as usual.
+  1. **Use the template of the billed duration** (12 or 6 months), with the same **Term**: the client is engaged longer, but billed 12 or 6 times.
+  2. Add the subscription as usual.
   3. Add the line item **CarCutter - 1 month free** or **CarCutter - 3 months free** ($0).
-  4. **Write it in the quote comments box**, e.g. *"Includes 1 month free: billing starts 1 month after go-live, then 12 months."*
+  4. **Write it in the quote comments box**, e.g. *"Includes 1 month free: billing starts 1 month after go-live, then 6 months."*
 - **Dates are automatic**: the subscription start and billing are pushed back by 1 or 3 months by a workflow. Don't touch them.
 
 ### 💡 What counts in your ARR
@@ -78,7 +85,7 @@
 - Edit the unit price, or give a discount the tool doesn't propose.
 - Waive set-up fees for **US SMB Tier 1**: onboarding won't start.
 - Sell Next gen 360 without checking the showroom: a **turntable** and a compatible floor are required.
-- Offer free months outside US strat accounts, or 3 months without telling your manager.
+- Offer free months outside US strat accounts, 3 months without telling your manager, or 3 months on a 6-month contract.
 
 # Understand
 

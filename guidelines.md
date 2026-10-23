@@ -249,13 +249,13 @@ Source: Notion "CarCutter Pricing & Offers" (https://app.notion.com/p/293ab682c9
 - **US SMB Tier 1 set-up fees cannot be waived**: onboarding won't start and ARR won't be recognized until they are paid.
 - **Quote templates** exist per language and contract duration (pattern `CARS - LANGUAGE - BILLING TYPE - DURATION`); picking the right duration puts the right T&Cs on the contract. In the US, Custom templates (with a comment box) go through manager approval; Standard ones don't.
 
-### US offer: 1 or 3 months free on a 12-month contract
+### US offer: free months on a 12-month or 6-month contract
 
-- **US strat accounts only.** Before offering 3 months free, the AE should **talk to their manager** (heads-up; no formal approval workflow, the standard 12-month template is used).
-- The client gets 1 or 3 months free, then pays for 12 months (13 or 15 months in total).
-- How: select the **12-month contract** quote template, add the subscription for 12 months as usual, then add the line item **CarCutter - 1 month free** (SKU CC1MONTHOFFER) or **CarCutter - 3 months free** (SKU CC3MONTHSOFFER), both at $0.
-- The engagement lasts 13 or 15 months, but the client is **billed 12 times**: always use the **12-month template** with **Term = 12**. The AE must **write the offer in the quote comments box** (e.g. "Includes 1 month free: billing starts 1 month after go-live, then 12 months").
-- A workflow automatically delays billing by 1 or 3 months after onboarding completion, and pushes the subscription start date by 1 or 3 months, when the deal contains these line items. Nothing to do for the AE; contract duration stays 12 months and the renewal is created at the right time.
+- **US strat accounts only.** Before offering 3 months free, the AE should **talk to their manager** (heads-up; no formal approval workflow, the standard template is used).
+- **12-month contract**: the client gets 1 or 3 months free, then pays for 12 months (13 or 15 months in total), billed 12 times.
+- **6-month contract**: the client gets 1 month free, then pays for 6 months (7 months in total), billed 6 times. No 3 months free on a 6-month contract.
+- How: select the quote template of the **billed duration** (12-month or 6-month) with **Term = 12 or 6**, add the subscription as usual, then add the line item **CarCutter - 1 month free** (SKU CC1MONTHOFFER) or **CarCutter - 3 months free** (SKU CC3MONTHSOFFER), both at $0. The AE must **write the offer in the quote comments box** (e.g. "Includes 1 month free: billing starts 1 month after go-live, then 6 months").
+- A workflow automatically pushes the subscription start date (and billing) by 1 or 3 months after onboarding completion when the deal contains these line items. Nothing to do for the AE; contract duration stays 12 or 6 months and the renewal is created at the right time.
 - The free months are not part of ARR.
 
 ## Engagement models and contract durations
