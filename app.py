@@ -34,9 +34,18 @@ CLAUDE_MODEL = os.environ.get('CLAUDE_MODEL', 'claude-opus-5')
 HOWTO_MD = (Path(__file__).parent / 'howto.md').read_text(encoding='utf-8')        # action-oriented cards
 GUIDE_MD = (Path(__file__).parent / 'guidelines.md').read_text(encoding='utf-8')     # full reference
 
-# The tool targets Account Executives (US team). "My deals" lists exactly these people
+# The tool targets Account Executives (North America and EMEA). "My deals" lists exactly these people
 # (HubSpot owner IDs, emails or full names, comma-separated). Override with the SALES_REPS env var.
 DEFAULT_SALES_REPS = ','.join([
+    # EMEA
+    '1087220563',  # Andy Crick
+    '863425261',  # Bertrand Piron
+    '36332452',  # Colm Grey
+    '912643021',  # Delphin Bourdonneau
+    '29426823',  # Glen Feldmann
+    '1817217764',  # Johannes Dalåker
+    '76044612',  # Luca Di Trapano
+    # North America, LATAM, APAC
     '35227458',  # Philip Tamez
     '31039261',  # Brian Paugh
     '30746930',  # Michael Lizza
