@@ -52,7 +52,7 @@
 | Upfront payment | **Credit pack** | Annually |
 | No commitment | **PayG**: VP approval only | |
 
-   Minimum commitment: if the client uses less than 100% over the year, the unused cars or images are billed.
+   Minimum commitment: the client is **billed every month on actual usage**, with a **minimum commitment for the year**. If they use less than 100% over the year, the unused cars or images are billed.
 5. New business: **always add a showroom**.
 
 ### ⭐ 5. US offer: 1 or 3 months free

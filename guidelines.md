@@ -193,7 +193,7 @@ Each stage has mandatory fields (gates). Fill them when you move the deal, not a
 - Apply discounts with **Unit discount**, never by editing the unit price.
 - Set **Term (months)** to the contract duration.
 - **Commitment type** (source: Notion "Quotes / line items creation"):
-  - **Minimum commitment**: API, price-per-car and price-per-image contracts. **Billing frequency = Monthly**, with a **minimum annual commitment**: if the client consumes less than 100% over the year, the unused cars or images are billed.
+  - **Minimum commitment**: API, price-per-car and price-per-image contracts. **Billing frequency = Monthly**: the client is billed every month on actual usage, with a **minimum annual commitment**: if the client consumes less than 100% over the year, the unused cars or images are billed.
   - **Credit pack**: only for upfront payments.
   - **PayG**: no commitment. Avoid it: **VP approval only**.
   - **Flat rate monthly**: the standard option for monthly flat-rate contracts.
