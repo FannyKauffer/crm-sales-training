@@ -26,9 +26,6 @@
 | **Standard** | 20 | + Shotlist · Hotspots · Stock images (NorthAm) |
 | **Premium** | Unlimited | + Next gen 360 · Standing inventory feed |
 
-**Add-ons**: Next gen 360 · Shotlist.
-**One-off fees** (billed once): showroom Standard 99 · Custom 399 · Tailor-made 799 (Standard & Premium only) · Integration IMS/DMS 299 · FTP or Cloud 199 · Training 150 and Hub set-up 199 (optional).
-
 ### 🔀 3. Pick the duration
 
 | Model | When |
@@ -36,10 +33,10 @@
 | **12-month commit** | Default |
 | **12 months + 1 or 3 months free** | US strat accounts only (see step 5) |
 | **1- or 3-month pilot + 12 months** | Client wants to try first: see *Sell a pilot* |
-| **3 months, auto-renew** | Won't commit to 12 months |
+| **3 months, auto-renew** | US only · won't commit to 12 months |
 | **6 months** | US only |
 | **Multi-year (≥ 18 months)** | Big accounts: **+20% ARR** for your bonus |
-| **1 month, auto-renew** | Last resort |
+| **1 month, auto-renew** | US only · larger accounts · **manager approval** |
 
 ### ✅ 4. Build the quote
 
@@ -51,12 +48,12 @@
 | Contract | Commitment type | Billing frequency |
 |---|---|---|
 | Flat monthly fee | **Flat rate monthly** | Monthly |
-| API · price per car · per image | **Minimum commitment** | **Annually** |
+| API · price per car · per image | **Minimum commitment** (annual) | **Monthly** |
 | Upfront payment | **Credit pack** | Annually |
 | No commitment | **PayG**: VP approval only | |
 
+   Minimum commitment: if the client uses less than 100% over the year, the unused cars or images are billed.
 5. New business: **always add a showroom**.
-6. HQ pays for all → **one quote** on the HQ. Each location pays → one deal + quote per location.
 
 ### ⭐ 5. US offer: 1 or 3 months free
 

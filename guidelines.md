@@ -193,7 +193,7 @@ Each stage has mandatory fields (gates). Fill them when you move the deal, not a
 - Apply discounts with **Unit discount**, never by editing the unit price.
 - Set **Term (months)** to the contract duration.
 - **Commitment type** (source: Notion "Quotes / line items creation"):
-  - **Minimum commitment**: API, price-per-car and price-per-image contracts. Set **Billing frequency = Annually** so the full commitment shows on the quote; Finance still bills monthly on actual consumption (add a comment to the buyer to clarify).
+  - **Minimum commitment**: API, price-per-car and price-per-image contracts. **Billing frequency = Monthly**, with a **minimum annual commitment**: if the client consumes less than 100% over the year, the unused cars or images are billed.
   - **Credit pack**: only for upfront payments.
   - **PayG**: no commitment. Avoid it: **VP approval only**.
   - **Flat rate monthly**: the standard option for monthly flat-rate contracts.
@@ -201,7 +201,6 @@ Each stage has mandatory fields (gates). Fill them when you move the deal, not a
   - Finance bills PayG and Minimum commitment contracts on consumption.
 - 🚨 **One-time is only for non-recurring items** (e.g. set-up fees). One-time is not counted as recurring revenue: the deal won't appear in your signings or bonus.
 - Deal amount (ARR) = recurring line items only. Set-up fees are excluded.
-- One deal/quote on the Parent if HQ pays for everyone; one deal/quote per Child if each rooftop pays.
 
 ## Renewals & upsells
 
@@ -266,8 +265,8 @@ Source: Notion "Engagement models" (CarCutter Sales Playbook). Our engagement mo
 1. 12-month commit (default)
 2. 1-month pilot + 12-month commit contract
 3. 3-month pilot + 12-month commit contract
-4. 1-month with auto-renew (last resort, should be exceptional)
-5. 3-month with auto-renew
+4. 1-month with auto-renew (US only, larger accounts, manager approval required)
+5. 3-month with auto-renew (US only)
 6. 6-month contract (US)
 7. Multi-year contract (≥ 18 months)
 
