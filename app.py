@@ -1,3 +1,4 @@
+import calendar
 import os
 import re
 import requests
@@ -531,6 +532,92 @@ def owners():
             break
     out.sort(key=lambda o: o['name'].lower())
     return jsonify({'owners': out})
+
+
+PILOT_PROPS = ['dealname', 'pipeline', 'dealstage', 'hubspot_owner_id', 'signingdate', 'closedate', 'billingstartdate',
+               'pilot_status', 'pilot_duration____months_', 'pilot_amount__local_currency_', 'deal_currency_code']
+
+
+def add_months(d, months):
+    m = d.month - 1 + months
+    y, m = d.year + m // 12, m % 12 + 1
+    return d.replace(year=y, month=m, day=min(d.day, calendar.monthrange(y, m)[1]))
+
+
+@app.route('/api/pilots')
+@api_login_required
+def pilots():
+    """Every deal flagged "Has a pilot? = Yes", with its expected pilot end date (signature + pilot duration)."""
+    if not TOKEN:
+        return jsonify({'error': 'HUBSPOT_API_TOKEN not set'}), 500
+    s = make_session()
+    body = {'filterGroups': [{'filters': [{'propertyName': 'has_a_pilot_', 'operator': 'EQ', 'value': 'Yes'},
+                                          {'propertyName': 'pipeline', 'operator': 'IN', 'values': [NB_PIPELINE, REN_PIPELINE]}]}],
+            'properties': PILOT_PROPS, 'limit': 100}
+    raw, after = [], None
+    while True:
+        if after:
+            body['after'] = after
+        resp = s.post(f'{BASE}/crm/v3/objects/deals/search', json=body, timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        raw.extend(data.get('results', []))
+        after = data.get('paging', {}).get('next', {}).get('after')
+        if not after or len(raw) >= 1000:
+            break
+
+    owner_names, after = {}, None
+    while True:
+        params = {'limit': 500, **({'after': after} if after else {})}
+        resp = s.get(f'{BASE}/crm/v3/owners', params=params, timeout=30)
+        if not resp.ok:
+            break
+        data = resp.json()
+        for o in data.get('results', []):
+            owner_names[str(o['id'])] = f"{o.get('firstName', '')} {o.get('lastName', '')}".strip() or o.get('email', '')
+        after = data.get('paging', {}).get('next', {}).get('after')
+        if not after:
+            break
+
+    stage_labels = get_stage_labels(s)
+    today = datetime.now(timezone.utc).date()
+    results = []
+    for d in raw:
+        p = d['properties']
+        stage, status = p.get('dealstage'), (p.get('pilot_status') or '').strip()
+        months = to_int(p.get('pilot_duration____months_'))
+        signed = stage in NB_WON | REN_WON | EXPIRED_STAGES
+        # The pilot starts at signature (Sales playbook)
+        start_raw = p.get('signingdate') or (p.get('closedate') if signed else None)
+        start = datetime.fromisoformat(start_raw[:10]).date() if start_raw else None
+        end = add_months(start, months) if start and months else None
+
+        if status in ('Success', 'Exit'):
+            group = 'decided'
+        elif stage in NB_LOST | REN_LOST:
+            group = 'lost'
+        elif signed:
+            group = 'overdue' if end and end < today else 'running'
+        else:
+            group = 'negotiation'
+
+        results.append({
+            'id': str(d['id']),
+            'name': p.get('dealname') or '(no name)',
+            'url': HUBSPOT_DEAL_URL.format(id=d['id']),
+            'owner': owner_names.get(p.get('hubspot_owner_id') or '', ''),
+            'stage': stage_labels.get(stage, stage),
+            'status': status,
+            'months': months,
+            'amount': p.get('pilot_amount__local_currency_'),
+            'currency': p.get('deal_currency_code') or '',
+            'start': start.isoformat() if start else '',
+            'end': end.isoformat() if end else '',
+            'days_left': (end - today).days if end else None,
+            'group': group,
+        })
+    results.sort(key=lambda r: r['end'] or '9999')
+    return jsonify({'pilots': results, 'today': today.isoformat()})
 
 
 @app.route('/api/my-deals')
