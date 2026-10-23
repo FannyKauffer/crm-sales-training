@@ -292,6 +292,7 @@ Source: Notion "Pilots" (CarCutter Sales Playbook).
 - If the contract doesn't look like this, it's not a pilot: create a standard 1- or 3-month contract.
 - In HubSpot: set **Has a pilot? = Yes** (at deal creation, or at the Negotiation/trade stage at the latest), **Pilot monthly amount**, **Pilot duration in months**, **Pilot status = In pipeline or negotiation**.
 - Pilot status values: *In pipeline or negotiation* (not signed) → *In progress* (signed, set automatically when the quote is signed) → *Success* (the client goes on with the 12-month contract) or *Exit* (the client stops: token deactivated, deal moves to Closed lost).
+- The pilot period starts at **go-live** (the deal's Subscription start date): pilot end = Subscription start date + pilot duration.
 - 1 or 3 months later, the AE must come back to the deal and set **Success** or **Exit**.
 - If the whole deal is a pilot, its ARR is 0.
 - After a pilot: more locations joining into a group agreement → Renewals & upsells pipeline; simply adding extra locations → New business.

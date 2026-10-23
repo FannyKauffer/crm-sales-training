@@ -166,7 +166,7 @@
     <section id="tab-pilots" class="hidden">
       <div class="mb-4">
         <h2 class="text-xl font-bold text-gray-800">Pilot follow-up</h2>
-        <p class="text-sm text-gray-500 mt-1">Every deal with <b>Has a pilot? = Yes</b>. Expected end = signature date + pilot duration.
+        <p class="text-sm text-gray-500 mt-1">Every deal with <b>Has a pilot? = Yes</b>. Expected end = go-live (subscription start date) + pilot duration.
           When a pilot ends, the AE sets <b>Pilot status = Success</b> or <b>Exit</b> on the deal.</p>
       </div>
       <div class="bg-white rounded-2xl border border-gray-100 p-4 flex flex-wrap gap-3 items-end mb-4">
@@ -244,12 +244,12 @@ function renderPilots() {
     if (p.group === 'lost' && p.status === 'In progress') return '<span class="text-xs text-amber-700">Deal lost or churned but pilot still "In progress"</span>';
     return '';
   };
-  const missing = p => !p.months ? '<span class="text-xs text-red-600">Duration missing</span>' : (!p.start && p.group !== 'negotiation' ? '<span class="text-xs text-red-600">Signing date missing</span>' : '');
+  const missing = p => !p.months ? '<span class="text-xs text-red-600">Duration missing</span>' : (!p.start && p.group === 'running' ? '<span class="text-xs text-gray-500">Not live yet</span>' : '');
   $('#pilots').innerHTML = `
     <table class="w-full text-sm">
       <thead class="bg-gray-50 text-xs uppercase tracking-wide text-gray-500 text-left">
         <tr><th class="py-2 px-4">Deal</th><th class="py-2 pr-4">Owner</th><th class="py-2 pr-4">Pilot status</th>
-            <th class="py-2 pr-4">Duration</th><th class="py-2 pr-4">Signed</th><th class="py-2 pr-4">Expected end</th><th class="py-2 pr-4"></th></tr>
+            <th class="py-2 pr-4">Duration</th><th class="py-2 pr-4">Go-live</th><th class="py-2 pr-4">Expected end</th><th class="py-2 pr-4"></th></tr>
       </thead>
       <tbody>${rows.map(p => `
         <tr class="border-t border-gray-50 align-top">

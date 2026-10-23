@@ -588,8 +588,8 @@ def pilots():
         stage, status = p.get('dealstage'), (p.get('pilot_status') or '').strip()
         months = to_int(p.get('pilot_duration____months_'))
         signed = stage in NB_WON | REN_WON | EXPIRED_STAGES
-        # The pilot starts at signature (Sales playbook)
-        start_raw = p.get('signingdate') or (p.get('closedate') if signed else None)
+        # The pilot starts at go-live, i.e. the subscription start date
+        start_raw = p.get('billingstartdate')
         start = datetime.fromisoformat(start_raw[:10]).date() if start_raw else None
         end = add_months(start, months) if start and months else None
 
