@@ -336,6 +336,24 @@ Add a one-line note (e.g. "Less than 100 cars on lot").
 | **Contract amendment** | It changes otherwise (group merge, name / entity, terms) |
 
 3. Quote = **the full contract** (existing + new), not just the extra.
+
+<div class="not-prose my-4 flex flex-col sm:flex-row items-stretch gap-3 text-sm">
+<div class="flex-1 rounded-xl border border-gray-200 bg-gray-50 p-3">
+<div class="text-xs font-semibold uppercase tracking-wide text-gray-500">Deal A · Parent</div>
+<div class="text-xs text-gray-400 mb-2">Current contract</div>
+<div class="rounded-md bg-white border border-gray-200 px-2 py-1 mb-1">Standard plan · Tier 2</div>
+<div class="rounded-md bg-white border border-gray-200 px-2 py-1">Shotlist</div>
+</div>
+<div class="flex sm:flex-col items-center justify-center text-gray-400 text-xs gap-1"><span class="text-xl leading-none sm:rotate-0 rotate-90">→</span><span>replaced by</span></div>
+<div class="flex-1 rounded-xl border-2 border-indigo-300 bg-indigo-50 p-3">
+<div class="text-xs font-semibold uppercase tracking-wide text-indigo-700">Deal B · Child (upsell)</div>
+<div class="text-xs text-indigo-400 mb-2">Quote B = A + new</div>
+<div class="rounded-md bg-white border border-gray-200 px-2 py-1 mb-1">Standard plan · Tier 2 <span class="text-xs text-gray-400">from A</span></div>
+<div class="rounded-md bg-white border border-gray-200 px-2 py-1 mb-1">Shotlist <span class="text-xs text-gray-400">from A</span></div>
+<div class="rounded-md bg-green-50 border border-green-300 px-2 py-1 font-medium text-green-800">+ Next gen 360 <span class="text-xs font-normal">new</span></div>
+</div>
+</div>
+
 4. Old deal → **More → Edit association labels → Parent deal**. Rooftop deals merged into one central deal? Each one is a Parent.
 5. Associate the company and the contact.
 
