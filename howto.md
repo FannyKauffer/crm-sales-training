@@ -60,7 +60,7 @@
 - **Who**: **US strat accounts only**. Offering 3 months? **Talk to your manager first.**
 - **What**: the client gets 1 or 3 months free, then pays 12 months (13 or 15 months in total).
 - **How**:
-  1. **Always a 12-month contract**: 12-month template, Term = 12. Never 13 or 15.
+  1. **Use the 12-month template, Term = 12**: the client is engaged for 13 or 15 months but **billed 12 times**.
   2. Add the subscription for 12 months as usual.
   3. Add the line item **CarCutter - 1 month free** or **CarCutter - 3 months free** ($0).
   4. **Write it in the quote comments box**, e.g. *"Includes 1 month free: billing starts 1 month after go-live, then 12 months."*
