@@ -211,7 +211,7 @@ const PILOT_GROUPS = {
   follow:      { label: 'To follow', groups: ['overdue', 'running'] },
   negotiation: { label: 'Not signed yet', groups: ['negotiation'] },
   decided:     { label: 'Success / Exit', groups: ['decided'] },
-  lost:        { label: 'Lost deals', groups: ['lost'] },
+  lost:        { label: 'Lost / churned', groups: ['lost'] },
   all:         { label: 'All', groups: ['overdue', 'running', 'negotiation', 'decided', 'lost'] },
 };
 let pilots = null, pilotFilter = 'follow';
@@ -241,7 +241,7 @@ function renderPilots() {
   const due = p => {
     if (p.group === 'overdue') return `<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600">Ended ${-p.days_left} d ago · set Success or Exit</span>`;
     if (p.group === 'running') return `<span class="px-2 py-0.5 rounded-full text-xs font-medium ${p.days_left <= 14 ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700'}">${p.days_left} d left</span>`;
-    if (p.group === 'lost' && p.status === 'In progress') return '<span class="text-xs text-amber-700">Deal lost but pilot still "In progress"</span>';
+    if (p.group === 'lost' && p.status === 'In progress') return '<span class="text-xs text-amber-700">Deal lost or churned but pilot still "In progress"</span>';
     return '';
   };
   const missing = p => !p.months ? '<span class="text-xs text-red-600">Duration missing</span>' : (!p.start && p.group !== 'negotiation' ? '<span class="text-xs text-red-600">Signing date missing</span>' : '');
