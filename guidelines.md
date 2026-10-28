@@ -7,19 +7,22 @@ HubSpot is the single source of truth for all our accounts, prospects and custom
 - **BDR**: owns prospecting data: company and contact BDR info, parent/child association and labels, child-company import requests for the accounts they hunt.
 - **AE**: owns deal data: contract, stakeholders, number of dealerships in the deal, and parent/child association **at company level and at deal level**. AEs are also responsible for cleaning their Top 100 accounts.
 - **CSM**: final owner of data quality on strategic accounts after signature.
-- **Sales Ops**: runs imports (Slack channel **#cc-import-requests**), templates and data monitoring.
+- **Sales Ops**: owns the Lead Import tool, helps with imports (Slack channel **#cc-import-requests**) and monitors data.
 
 ---
 
 # Module 1: Contacts & companies
 
-## Import requests
+## Creating and importing companies: the Lead Import tool
 
-- **Never use HubSpot's own import.** Companies in bulk: use the **Company Importer** (https://lead-import-production.up.railway.app/), which checks for duplicates. Otherwise pick the right template, **make a copy**, fill it in and send it to your Sales Manager or Sales Ops (Romane).
-- Templates: Contact import / Company import / Company + contact / BDR template (child companies of a parent).
-- Companies are matched by **domain name**, not company name. A wrong or missing domain creates duplicates.
-- Contacts are matched by **email**. If the email already exists (even as a secondary email), the import fails.
-- More than 10 locations to add → post a request in **#cc-import-requests** with the parent company name, HQ address, expected number of locations and website.
+- **Every company is created through the Lead Import tool** (https://lead-import-production.up.railway.app/, sign in with your CarCutter Google account): one by one with the **Form**, or in bulk with a **CSV import**. It searches HubSpot for duplicates before writing anything.
+- **Never** create a company directly in HubSpot or from Seamless, and **never use HubSpot's own import**.
+- Required fields: Company name, Country, City, and Domain or Website (+ US Company State for US companies; US rows without it are skipped).
+- Review screen: each lead gets a confidence score against existing companies. 100% and 50–99% → **Enrich** (only fills empty fields, never overwrites, not a merge); below 50% and New → **Import new**. Check the 50–99% ones line by line.
+- The Form can link the company to an existing HubSpot company (Parent/Child). The company owner is pre-filled with you; **Imported by** is stamped automatically.
+- CSV: don't hand-edit it in Excel or Sheets (names with commas break the columns); re-export from the source. Owner names must match HubSpot users exactly, or the lead imports without owner.
+- **Contacts** are not created by the tool: import them from Seamless (check the email domain matches the website) or add them on the existing company. Contacts are matched by **email**: if it already exists (even as an additional email), the import fails.
+- Stuck, or a very large group to build → **#cc-import-requests**.
 
 ## Naming convention
 
@@ -35,11 +38,11 @@ Wrong naming breaks automation, reporting and lead routing.
 - **HQ manages contract & billing** → one Parent Company, **one deal**, one quote covering all rooftops. Child companies exist for reference.
 - **Each rooftop pays individually** → **one deal and one quote per Child Company**, each still linked to the Parent.
 - Always link parent and child companies and use the **association labels** "Parent Company" / "Child Company".
-- On creation: use "Associate company with" and set the label in the form. On an existing record: Companies section → More → **Edit association labels**.
+- On creation: link the company to its parent in the Lead Import tool Form. On an existing record: Companies section → More → **Edit association labels**.
 
 ## Seamless
 
-- Always **check HubSpot first**: if the company already exists, do not create a duplicate.
+- Use Seamless to find companies and import **contacts**. **Companies are created through the Lead Import tool**, not from Seamless.
 - Seamless data is not 100% accurate: check that the email domain matches the company website before importing. No mass import without a quality check.
 
 ## Your HubSpot views
@@ -52,7 +55,7 @@ Wrong naming breaks automation, reporting and lead routing.
 
 - Shared view of about 700 records (top 100 per market). It should only contain **parent companies (HQs)**. Flag any child company you see.
 - **Total number of dealerships** must be filled at company level. It drives **group coverage** (e.g. 100 signed / 300 dealerships = 30%).
-- **Group completeness**: if the number of linked child companies does not match the total dealerships, request a child-company import.
+- **Group completeness**: if the number of linked child companies does not match the total dealerships, add the missing locations with the Lead Import tool (CSV import for many).
 
 ## Is this company already a client?
 

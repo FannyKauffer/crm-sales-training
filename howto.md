@@ -127,25 +127,30 @@
 ### 🤝 Others own
 
 - **CSM**: onboarding, renewals and churn, after Closed won
-- **Sales Ops**: imports and data checks → Slack **#cc-import-requests**
+- **Sales Ops**: Lead Import tool and data checks → Slack **#cc-import-requests**
 
 # Create
 
 ## 🏢 Create a company
 
-> Add a dealership or a group, without creating a duplicate.
+> Add a dealership or a group through the Lead Import tool: it checks for duplicates first.
 
 ### ✅ Do
 
-1. **Search HubSpot first** (name + website).
-2. Companies → **Create company**, **website** filled in.
-3. Name it: `Group name - HQ` for the HQ, business name for a location.
-4. Location of a group? **Associate company with** the HQ → label **Parent Company**.
-5. Fill **Client type**, **Total number of dealerships in group** (on the HQ, 1 if single store), **DMS / IMS**, **Country**.
+1. Open the **[Lead Import tool](https://lead-import-production.up.railway.app/)** → **Form** (sign in with your CarCutter Google account).
+2. Fill **Company name**, **Country**, **City**, **Domain or Website** (+ **US Company State** for the US).
+3. Name it: `Group name - HQ` for the HQ, business name for a location. Location of a group? Link it to the HQ as **Child**.
+4. Duplicate found? **Enrich** the existing company: it only fills empty fields. Nothing found? **Import new**.
+5. In HubSpot, fill **Client type**, **Total number of dealerships in group** (on the HQ, 1 if single store), **DMS / IMS**.
+
+### 💡 Good to know
+
+- Contacts: import them from **Seamless** (check the email domain matches the website) or add them on the existing company.
 
 ### ❌ Never
 
-- Create a duplicate.
+- Create a company directly in HubSpot or from Seamless: no duplicate check.
+- Use HubSpot's own import.
 - Create a whole group by hand: see *Add the locations of a group*.
 
 ## 🏬 Add the locations of a group
@@ -154,14 +159,18 @@
 
 ### ✅ Do
 
-- **A few locations**: HQ company → Companies → **+ Add** → label **Child Company**.
-- **Many locations**: **[Company Importer](https://lead-import-production.up.railway.app/)** (bulk + duplicate check).
+All through the **[Lead Import tool](https://lead-import-production.up.railway.app/)**, which checks for duplicates before writing anything:
+
+- **A few locations**: **Form**, one per location, linked to the HQ as **Child**.
+- **Many locations**: **CSV import**. Required columns: Company name, Country, City, Domain or Website (+ US Company State for the US). Review the matches: 100% and 50–99% → **Enrich**, below 50% and New → **Import new**.
+- Already in HubSpot? HQ company → Companies → **+ Add** → label **Child Company**.
 - Check: number of child companies = **Total number of dealerships in group**.
 - Stuck? Slack **#cc-import-requests**.
 
 ### ❌ Never
 
-- Use HubSpot's own import tool.
+- Use HubSpot's own import, or create the locations directly in HubSpot.
+- Edit the CSV in Excel or Sheets by hand: names with commas break the columns. Re-export it from the source.
 
 ## 🎯 Create a lead or handle an inbound
 
