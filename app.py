@@ -340,6 +340,8 @@ CHECKS = [
      'title': 'Recurring line item without a Term', 'why': 'Term = contract duration in months.'},
     {'id': 'won_duration', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Close a deal as won',
      'title': '"Contract duration (in months)" is empty', 'why': 'Filled automatically by the Data team within 2 hours of signature (checked after 24h). Fill it yourself for multi-duration contracts. No duration = no end date = no renewal deal. Not required on set-up fees only deals.'},
+    {'id': 'won_setup_only_recurring', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build your offer and quote',
+     'title': '"Set-up fees only" deal with a recurring line item', 'why': 'A set-up fees only deal has no recurring revenue: every line item must be billed One-time. A subscription belongs on its own deal, otherwise it is missing from ARR and renewals.'},
     {'id': 'won_setup_only_items', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Build your offer and quote',
      'title': '"Set-up fees only" deal with other line items', 'why': 'A set-up fees only deal may only contain showroom, integration or inventory processing fees, no subscription, flat fee or API.'},
     {'id': 'won_setup_only_child', 'scope': 'Signed deals · Both pipelines', 'severity': 'error', 'section': 'Create an upsell, downsell or amendment',
@@ -460,9 +462,13 @@ def check_won_common(p, line_items, has_parent_deal=None):
     if setup_only and has_parent_deal:
         flags.append(flag('won_setup_only_child'))
     if setup_only and line_items:
+        recurring = [li.get('name') or '?' for li in line_items if li.get('recurringbillingfrequency')]
+        if recurring:
+            flags.append(flag('won_setup_only_recurring',
+                              f'"Set-up fees only" deal with a recurring line item: {", ".join(recurring[:3])}'))
         wrong = [li.get('name') or '?' for li in line_items
-                 if li.get('recurringbillingfrequency')
-                 or not any(k in (li.get('name') or '').lower() for k in SETUP_ONLY_KEYWORDS)]
+                 if not li.get('recurringbillingfrequency')
+                 and not any(k in (li.get('name') or '').lower() for k in SETUP_ONLY_KEYWORDS)]
         if wrong:
             flags.append(flag('won_setup_only_items',
                               f'"Set-up fees only" deal with other line items: {", ".join(wrong[:3])}'))
