@@ -225,6 +225,7 @@ Each stage has mandatory fields (gates). Fill them when you move the deal, not a
 - Create a renewal in New Business.
 - Close won without the **Parent link**: the old contract stays open and the client can be billed twice.
 - Link deals when the new locations are under a **separate contract** that doesn't replace the old one.
+- Enter or change a subscription start date by hand. If the client negotiated a specific start date, ask in Slack **#crm-question** first (avoid it if possible).
 
 **💡 Good to know**
 - At Closed won, HubSpot closes the old contract for you:
@@ -232,8 +233,12 @@ Each stage has mandatory fields (gates). Fill them when you move the deal, not a
 | Renewal type | New contract starts | Old contract ends | Old deal reason |
 |---|---|---|---|
 | Upsell | Closed won + 1 month | Closed won + 1 month | Upsold |
-| Downsell | Closed won | Closed won | Downsold |
-| Contract amendment | Closed won | Closed won | Contract amendment |
+| Downsell | Closed won (set 24h later) | Closed won | Downsold |
+| Contract amendment | Closed won (set 24h later) | Closed won | Contract amendment |
+
+- HubSpot also sets **Revoke auto-renew = Yes** with the reason above on the old deal, then moves it to **Contract has expired** on its end date. Nothing to do by hand.
+- An upsell stays in **Closed won** for one month, then moves to **Contract is live** on its start date. The old deal stays live until then and expires that day (the client keeps being billed the old amount meanwhile).
+- If an upsell's start date was changed: check that the old deal moves to **Contract has expired** on the new date.
 
 - A location **added to a centralized contract** = upsell, linked as Child (e.g. Ed Napleton).
 - Year 1 is parent of Year 2, Year 2 of Year 3. Several rooftop deals merged into one central deal are all Parents of it.

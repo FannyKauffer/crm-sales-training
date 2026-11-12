@@ -371,6 +371,34 @@ Add a one-line note (e.g. "Less than 100 cars on lot").
 - Link a deal that doesn't replace the contract (new showroom, add-on, separate location contract).
 - Hold the CSM's renewal open to negotiate: let it close, then open a separate upsell.
 
+### 💡 Good to know
+
+- At Closed won, HubSpot sets the dates and closes the old deal **if it is labelled Parent deal** → *Subscription dates*.
+
+## 📅 Subscription dates
+
+> HubSpot sets them at Closed won. Don't touch them.
+
+### ✅ Do
+
+Let HubSpot set the dates at Closed won:
+
+| Type | New contract starts | Old contract ends |
+|---|---|---|
+| **Upsell** | Closed won **+ 1 month** | Same day |
+| **Downsell · Contract amendment** | Closed won | Closed won |
+
+Client negotiated a specific start date? Ask in Slack **#crm-question** first. Avoid it if you can.
+
+### ❌ Never
+
+- Enter a start date by hand.
+
+### 💡 Good to know
+
+- An upsell stays in **Closed won** for one month, then moves to **Contract is live** on its start date. The old deal stays live until then and expires that day.
+- Start date changed? Check that the old deal moves to **Contract has expired** on the new date.
+
 ## 📍 Add a location to a contract
 
 > Joins the central contract? Upsell. Its own contract? New deal, no link.
