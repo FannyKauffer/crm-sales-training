@@ -211,17 +211,33 @@ Each stage has mandatory fields (gates). Fill them when you move the deal, not a
 
 ## Renewals & upsells
 
-1. Create the deal in the **Renewals & upsells** pipeline, **never in New Business**.
-2. Set the **Renewal type** (Flat renewal, Renewal - upsell, Renewal - downsell, Contract amendment, API Package renewal, Conversion to commit…):
-   - **Renewal - upsell**: the contract grows (more products, more locations, more value).
-   - **Renewal - downsell**: the contract shrinks.
-   - **Contract amendment**: the contract changes without being an upsell or downsell (e.g. rooftop contracts merged into a group agreement, a legal entity or contract name change, a change of terms). It still cancels and replaces the old contract.
-   - New locations under a separate contract that does not replace the previous one: **don't link** the deals. Several contracts can live together for different sub-companies.
-   - But a location **added to a centralized contract** replaces that contract: it's an upsell, linked as Child (e.g. Ed Napleton).
-3. The new deal must contain the **full updated contract** (existing + new line items), not only the added product.
-4. Associate old and new deals: on the **original deal** → More → Edit association labels → **Parent deal**. The new deal is the child. Year 1 is parent of Year 2, Year 2 of Year 3. A child usually has one parent; exception: several rooftop deals merged into one centralized deal are all Parents of the central deal.
-5. On the original deal: Actions → **Revoke auto-renew = Yes** with reason **Upsold**, **Downsold** or **Contract amendment**. Skipping this can bill the client twice.
-6. Configuration ticket: created automatically for any Renewal type other than Flat renewal. No action needed.
+**✅ Do**
+- Create the deal in the **Renewals & upsells** pipeline.
+- Set the **Renewal type**:
+  - **Flat renewal**: same contract, renewed as is
+  - **Renewal - upsell**: the contract grows
+  - **Renewal - downsell**: the contract shrinks
+  - **Contract amendment**: any other change that replaces the contract (merge into a group agreement, entity or name change, new terms, per car → per dealership, API package, conversion to commit)
+- Put the **full updated contract** in the new deal (existing + new line items).
+- **Before Closed won**: on the original deal → More → Edit association labels → **Parent deal**.
+
+**🚫 Never**
+- Create a renewal in New Business.
+- Close won without the **Parent link**: the old contract stays open and the client can be billed twice.
+- Link deals when the new locations are under a **separate contract** that doesn't replace the old one.
+
+**💡 Good to know**
+- At Closed won, HubSpot closes the old contract for you:
+
+| Renewal type | New contract starts | Old contract ends | Old deal reason |
+|---|---|---|---|
+| Upsell | Closed won + 1 month | Closed won + 1 month | Upsold |
+| Downsell | Closed won | Closed won | Downsold |
+| Contract amendment | Closed won | Closed won | Contract amendment |
+
+- A location **added to a centralized contract** = upsell, linked as Child (e.g. Ed Napleton).
+- Year 1 is parent of Year 2, Year 2 of Year 3. Several rooftop deals merged into one central deal are all Parents of it.
+- Configuration ticket: created automatically for any type except Flat renewal.
 
 ## Handover to CSM
 
