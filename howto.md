@@ -139,7 +139,7 @@
 
 1. Open the **[Lead Import tool](https://lead-import-production.up.railway.app/)** → **Form** (sign in with your CarCutter Google account).
 2. Fill **Company name**, **Country**, **City**, **Domain or Website** (+ **US Company State** for the US).
-3. Name it: `Group name - HQ` for the HQ, business name for a location. Location of a group? Link it to the HQ as **Child**.
+3. Name it: `Group name - HQ` for the HQ, business name for a location (rooftop). Rooftop of a group? Link it to its HQ as **Child**: **one parent only**.
 4. Duplicate found? **Enrich** the existing company: it only fills empty fields. Nothing found? **Import new**.
 5. In HubSpot, fill **Client type**, **Total number of dealerships in group** (on the HQ, 1 if single store), **DMS / IMS**.
 
@@ -155,7 +155,7 @@
 
 ## 🏬 Add the locations of a group
 
-> Every location must exist as a company, even on a central contract.
+> Every rooftop must exist as a company, even on a central contract: deals go on the rooftops.
 
 ### ✅ Do
 
@@ -171,6 +171,7 @@ All through the **[Lead Import tool](https://lead-import-production.up.railway.a
 
 - Use HubSpot's own import, or create the locations directly in HubSpot.
 - Edit the CSV in Excel or Sheets by hand: names with commas break the columns. Re-export it from the source.
+- Give a rooftop two parents, or link it to another rooftop: **one rooftop → one HQ**.
 
 ## 🎯 Create a lead or handle an inbound
 
@@ -234,16 +235,19 @@ Not 4 yes → close it early.
 | DMS | **Required** |
 | HQ name · Products · Legal name · Affiliated brands | If you have them |
 
-3. Associate the **contact** and the right **companies**:
+3. Associate the **contact** and the **rooftops** covered by the contract:
 
 | Contract | Associate with |
 |---|---|
-| **Localized** (one rooftop signs and pays) | The rooftop company only |
-| **Centralized** (the HQ signs for several) | The HQ **+ every location** covered |
+| **Localized** (one rooftop signs and pays) | That rooftop only |
+| **Centralized** (the HQ signs for several) | **Every rooftop covered**, not the HQ |
+
+<div class="my-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"><b>🛑 Deals go on rooftops, never on the HQ.</b> The HQ (<code>Group name - HQ</code>) is the whole group, not a dealership. Even when the HQ signs and pays, associate the rooftops. Each rooftop has <b>one parent only</b>: its HQ.</div>
 
 ### ❌ Never
 
 - Open a New business deal for an existing client buying more → *Create an upsell*.
+- Associate the HQ company with the deal: it counts the whole group, not the rooftops you sold.
 
 ## 📅 Book and log a demo
 
@@ -375,14 +379,14 @@ Add a one-line note (e.g. "Less than 100 cars on lot").
 
 ### ✅ First
 
-Create the location as a **Child company** of the HQ.
+Create the rooftop as a **Child company** of its HQ (one parent only).
 
 ### 🔀 Then
 
 | The location… | Do |
 |---|---|
 | **Has its own contract** | New business deal on the location · 1 dealership · **no link** |
-| **Joins the centralized contract** (e.g. Ed Napleton) | **Upsell**: quote for all locations · old central deal = Parent · update the dealership count · multi-location = Yes · associate HQ + all locations |
+| **Joins the centralized contract** (e.g. Ed Napleton) | **Upsell**: quote for all locations · old central deal = Parent · update the dealership count · multi-location = Yes · associate **every rooftop covered**, not the HQ |
 
 ## 🔎 Check if a company is already a client
 
