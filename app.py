@@ -315,7 +315,7 @@ CHECKS = [
     {'id': 'nb_deal_gt_group', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'More dealerships in the deal than in the group', 'why': 'A deal cannot cover more locations than the group has: one of the two numbers is wrong.'},
     {'id': 'nb_no_company', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
-     'title': 'No company associated to the deal', 'why': 'Every deal must be linked to its company (and to every location it covers).'},
+     'title': 'No company associated to the deal', 'why': 'Every deal must be linked to the locations it covers, or to the HQ only when the whole group is in the deal.'},
     {'id': 'nb_no_contact', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Create a deal',
      'title': 'No contact associated to the deal', 'why': 'Every deal must be linked to a contact.'},
     {'id': 'nb_won_dms', 'scope': 'Signed deals · New business', 'severity': 'error', 'section': 'Close a deal as won',
