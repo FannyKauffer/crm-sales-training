@@ -238,12 +238,14 @@ Not 4 yes → close it early.
 
 | Contract | Associate with |
 |---|---|
-| **Localized** (one rooftop signs and pays) | The rooftop company only |
-| **Centralized** (the HQ signs for several) | The HQ **+ every location** covered |
+| **One location** | That location only |
+| **Centralized, some locations of the group** | Those locations · **not the HQ** |
+| **Centralized, all locations of the group** | **The HQ only** |
 
 ### ❌ Never
 
 - Open a New business deal for an existing client buying more → *Create an upsell*.
+- Associate the HQ **and** locations on the same deal.
 
 ## 📅 Book and log a demo
 
@@ -382,7 +384,7 @@ Create the location as a **Child company** of the HQ.
 | The location… | Do |
 |---|---|
 | **Has its own contract** | New business deal on the location · 1 dealership · **no link** |
-| **Joins the centralized contract** (e.g. Ed Napleton) | **Upsell**: quote for all locations · old central deal = Parent · update the dealership count · multi-location = Yes · associate HQ + all locations |
+| **Joins the centralized contract** (e.g. Ed Napleton) | **Upsell**: quote for all locations · old central deal = Parent · update the dealership count · multi-location = Yes · associate the locations covered, or **the HQ only** if the whole group is now in |
 
 ## 🔎 Check if a company is already a client
 

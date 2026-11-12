@@ -35,8 +35,12 @@ Wrong naming breaks automation, reporting and lead routing.
 
 ## Parent-child structure
 
-- **HQ manages contract & billing** → one Parent Company, **one deal**, one quote covering all rooftops. Child companies exist for reference.
-- **Each rooftop pays individually** → **one deal and one quote per Child Company**, each still linked to the Parent.
+- Which companies to associate with a deal:
+  - **Deal for one location** → that location only.
+  - **Centralized deal, some locations of the group** → those locations only, **not the HQ**.
+  - **Centralized deal, all locations of the group** → **the HQ only**.
+  - Never the HQ and locations on the same deal.
+- **Each rooftop pays individually** → **one deal and one quote per Child Company**, each Child still linked to the Parent company.
 - Always link parent and child companies and use the **association labels** "Parent Company" / "Child Company".
 - On creation: link the company to its parent in the Lead Import tool Form. On an existing record: Companies section → More → **Edit association labels**.
 
