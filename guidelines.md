@@ -40,9 +40,12 @@ Wrong naming breaks automation, reporting and lead routing.
   - **Centralized deal, some locations of the group** → those locations only, **not the HQ**.
   - **Centralized deal, all locations of the group** → **the HQ only**.
   - Never the HQ and locations on the same deal.
+- **Every deal must have a Primary company** (association label "Primary"): the company for a one-company deal, one of the locations for a multi-location deal, the LSP for a lot service provider deal. A deal without a Primary company is not counted in the Group ARR.
 - **Each rooftop pays individually** → **one deal and one quote per Child Company**, each Child still linked to the Parent company.
 - Always link parent and child companies and use the **association labels** "Parent Company" / "Child Company".
+- **Two levels maximum**: HQ → sub-HQ → location. Deeper structures are not counted up to the top HQ: flatten them.
 - On creation: link the company to its parent in the Lead Import tool Form. On an existing record: Companies section → More → **Edit association labels**.
+- **Lot service providers (LSP)**: the LSP pays for the locations it serves. Make the **LSP the Primary company** of the deal; the served locations can stay linked for information. The ARR counts in the LSP's Group ARR, not in the dealers' groups.
 
 ## Seamless
 
