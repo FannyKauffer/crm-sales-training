@@ -56,6 +56,10 @@ DEFAULT_SALES_REPS = ','.join([
     '29929356',  # James Norris
     '31130308',  # Zack (Zachary) Adamson
     '1711396065',  # Patrick Konczewski
+    # New joiners (Nov 2026)
+    '40681188',  # Hannah Mullis
+    '40681660',  # Clyde Canizares
+    '40680781',  # Steve Williams
 ])
 SALES_REPS = {r.strip().lower() for r in os.environ.get('SALES_REPS', DEFAULT_SALES_REPS).split(',') if r.strip()}
 
