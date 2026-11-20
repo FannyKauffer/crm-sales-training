@@ -293,7 +293,6 @@ Not 4 yes → close it early.
 
 - [ ] Line items on the quote
 - [ ] Dealerships in group · dealerships in this deal
-- [ ] Is multi-location deal?
 - [ ] **DMS** (not "Other")
 - [ ] Revoke auto-renew = Yes **only** if the client wants to renew manually
 - [ ] Pinned note for the CSM: contact, sites, features to activate, standing inventory
@@ -412,7 +411,7 @@ Create the location as a **Child company** of the HQ.
 | The location… | Do |
 |---|---|
 | **Has its own contract** | New business deal on the location · 1 dealership · **no link** |
-| **Joins the centralized contract** (e.g. Ed Napleton) | **Upsell**: quote for all locations · old central deal = Parent · update the dealership count · multi-location = Yes · associate the locations covered, or **the HQ only** if the whole group is now in |
+| **Joins the centralized contract** (e.g. Ed Napleton) | **Upsell**: quote for all locations · old central deal = Parent · update the dealership count · associate the locations covered, or **the HQ only** if the whole group is now in |
 
 ## 🔎 Check if a company is already a client
 
