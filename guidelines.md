@@ -15,6 +15,7 @@ HubSpot is the single source of truth for all our accounts, prospects and custom
 
 ## Creating and importing companies: the Lead Import tool
 
+- **Before creating any company, search HubSpot to make sure it doesn't already exist**: company name and its variants, website domain, city, and the child companies of its group (a dealership may already exist under its HQ). If it exists, use it: never create a second one. A duplicate splits the activity history, the deals and the Group ARR.
 - **Every company is created through the Lead Import tool** (https://lead-import-production.up.railway.app/, sign in with your CarCutter Google account): one by one with the **Form**, or in bulk with a **CSV import**. It searches HubSpot for duplicates before writing anything.
 - **Never** create a company directly in HubSpot or from Seamless, and **never use HubSpot's own import**.
 - Required fields: Company name, Country, City, and Domain or Website (+ US Company State for US companies; US rows without it are skipped).

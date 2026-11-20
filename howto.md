@@ -133,11 +133,14 @@
 
 ## 🏢 Create a company
 
-> Add a dealership or a group through the Lead Import tool: it checks for duplicates first.
+> First make sure it's not already in HubSpot. Then create it through the Lead Import tool.
+
+<div class="my-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"><b>🛑 Search HubSpot before creating any company.</b> Search the name (and its variants), the website domain and the city. Check the group too: the dealership may already exist as a child of its HQ. Found it? Use it, never create a second one.</div>
 
 ### ✅ Do
 
-1. Open the **[Lead Import tool](https://lead-import-production.up.railway.app/)** → **Form** (sign in with your CarCutter Google account).
+0. **Search HubSpot first**: company name and variants, domain, city, and the group's child companies. Already there? Stop: use the existing company.
+1. Not found? Open the **[Lead Import tool](https://lead-import-production.up.railway.app/)** → **Form** (sign in with your CarCutter Google account).
 2. Fill **Company name**, **Country**, **City**, **Domain or Website** (+ **US Company State** for the US).
 3. Name it: `Group name - HQ` for the HQ, business name for a location. Location of a group? Link it to the HQ as **Child**.
 4. Duplicate found? **Enrich** the existing company: it only fills empty fields. Nothing found? **Import new**.
@@ -149,17 +152,20 @@
 
 ### ❌ Never
 
+- Create a company without searching HubSpot first: a duplicate splits the history, the deals and the Group ARR.
 - Create a company directly in HubSpot or from Seamless: no duplicate check.
 - Use HubSpot's own import.
 - Create a whole group by hand: see *Add the locations of a group*.
 
 ## 🏬 Add the locations of a group
 
-> Every location must exist as a company, even on a central contract.
+> Every location must exist as a company, even on a central contract. Check first that it isn't already in HubSpot.
+
+<div class="my-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"><b>🛑 Search HubSpot before creating any company.</b> Search the name (and its variants), the website domain and the city. Check the group too: the dealership may already exist as a child of its HQ. Found it? Use it, never create a second one.</div>
 
 ### ✅ Do
 
-All through the **[Lead Import tool](https://lead-import-production.up.railway.app/)**, which checks for duplicates before writing anything:
+First, open the HQ in HubSpot and check its child companies, then search each missing location by name, domain and city. Only the ones not found are created, all through the **[Lead Import tool](https://lead-import-production.up.railway.app/)**, which checks for duplicates before writing anything:
 
 - **A few locations**: **Form**, one per location, linked to the HQ as **Child**.
 - **Many locations**: **CSV import**. Required columns: Company name, Country, City, Domain or Website (+ US Company State for the US). Review the matches: 100% and 50–99% → **Enrich**, below 50% and New → **Import new**.
@@ -169,6 +175,7 @@ All through the **[Lead Import tool](https://lead-import-production.up.railway.a
 
 ### ❌ Never
 
+- Create a location without checking it's not already in HubSpot (as a child of the HQ or on its own).
 - Use HubSpot's own import, or create the locations directly in HubSpot.
 - Edit the CSV in Excel or Sheets by hand: names with commas break the columns. Re-export it from the source.
 
@@ -187,8 +194,9 @@ All through the **[Lead Import tool](https://lead-import-production.up.railway.a
 
 ### ✅ Outbound
 
-1. **Create → Lead**, with a **contact** attached.
-2. Pipeline **New leads** · stage **New/Attempting** · type **New business** · vertical **Carcutter** · owner = you.
+1. Search HubSpot for the company first: it may already exist (name, domain, city, group). Only if it doesn't, create it → *Create a company*.
+2. **Create → Lead**, with a **contact** attached.
+3. Pipeline **New leads** · stage **New/Attempting** · type **New business** · vertical **Carcutter** · owner = you.
 
 ### ❌ Never
 
@@ -404,7 +412,7 @@ Client negotiated a specific start date? Ask in Slack **#crm-question** first. A
 
 ### ✅ First
 
-Create the location as a **Child company** of the HQ.
+Check the location isn't already in HubSpot (HQ's child companies, then search by name, domain and city). Already there? Link it to the HQ as **Child company**. Not found? Create it through the Lead Import tool as a **Child company** of the HQ.
 
 ### 🔀 Then
 
